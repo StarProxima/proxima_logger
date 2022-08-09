@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 class StackTraceFormatter {
-  const StackTraceFormatter(this.stackTraceBeginIndex);
+  const StackTraceFormatter([this.stackTraceBeginIndex = 0]);
 
   final int stackTraceBeginIndex;
 
@@ -27,7 +29,8 @@ class StackTraceFormatter {
     if (match == null) {
       return false;
     }
-    return match.group(2)!.startsWith('package:logger');
+    return match.group(2)!.startsWith('package:flutter') ||
+        match.group(2)!.startsWith('dart:');
   }
 
   static bool _discardWebStacktraceLine(String line) {
@@ -49,6 +52,7 @@ class StackTraceFormatter {
   }
 
   String? format(StackTrace? stackTrace, int methodCount) {
+    log('format');
     var lines = stackTrace.toString().split('\n');
     if (stackTraceBeginIndex > 0 && stackTraceBeginIndex < lines.length - 1) {
       lines = lines.sublist(stackTraceBeginIndex);

@@ -15,7 +15,7 @@ abstract class LogPrinter {
 
 class PrettyPrinter extends LogPrinter {
   PrettyPrinter({
-    this.stackTraceBeginIndex = 0,
+    this.stackTraceBeginIndex = 2,
     this.methodCount = 2,
     this.errorMethodCount = 3,
     this.printTime = true,

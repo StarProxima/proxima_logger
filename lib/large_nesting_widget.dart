@@ -34,6 +34,35 @@ class LargeNestingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _fun0();
+    return _NestingWidget1(
+      child: ElevatedButton(
+        onPressed: () {
+          logger.log(
+            'LargeNestingWidget',
+            LogType.wtf,
+          );
+          log('LargeNestingWidget');
+        },
+        child: const Text('LargeNestingWidget'),
+      ),
+    );
+  }
+}
+
+class _NestingWidget1 extends StatefulWidget {
+  const _NestingWidget1({Key? key, required this.child}) : super(key: key);
+
+  final Widget child;
+
+  @override
+  State<_NestingWidget1> createState() => _NestingWidget1State();
+}
+
+class _NestingWidget1State extends State<_NestingWidget1> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: widget.child,
+    );
   }
 }
