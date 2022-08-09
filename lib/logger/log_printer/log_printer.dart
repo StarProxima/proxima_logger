@@ -4,31 +4,56 @@ import '../ansi_color.dart';
 
 import '../proxima_logger.dart';
 import 'stack_trace_formatter.dart';
-
-/// Default implementation of [LogPrinter].
-///
-/// Output looks like this:
-/// ```
-/// ┌──────────────────────────
-/// │ Error info
-/// ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-/// │ Method stack history
-/// ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-/// │ Log message
-/// └──────────────────────────
-/// ```
+import 'time_formatter.dart';
 
 abstract class LogPrinter {
   void init() {}
 
-  /// Is called every time a new [LogEvent] is sent and handles printing or
-  /// storing the message.
   List<String> log(LogEvent event);
 
   void destroy() {}
 }
 
 class PrettyPrinter extends LogPrinter {
+  PrettyPrinter({
+    this.stackTraceBeginIndex = 0,
+    this.methodCount = 2,
+    this.errorMethodCount = 3,
+    this.lineLength = 120,
+    this.colors = true,
+    this.printEmojis = true,
+    this.printTime = true,
+    this.excludeBox = const {},
+    this.noBoxingByDefault = false,
+  }) {
+    var doubleDividerLine = StringBuffer();
+    var singleDividerLine = StringBuffer();
+    for (var i = 0; i < lineLength - 1; i++) {
+      doubleDividerLine.write(doubleDivider);
+      singleDividerLine.write(singleDivider);
+    }
+
+    _topBorder = '$topLeftCorner$doubleDividerLine';
+    _middleBorder = '$middleCorner$singleDividerLine';
+    _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
+
+    includeBox = {};
+    for (var l in Level.values) {
+      includeBox[l] = !noBoxingByDefault;
+    }
+    excludeBox.forEach((k, v) => includeBox[k] = !v);
+  }
+
+  static final DateTime _startTime = DateTime.now();
+
+  late LogTimeFormatter logTimeFormatter = LogTimeFormatter(
+    _startTime,
+  );
+
+  late StackTraceFormatter stackTraceFormatter = StackTraceFormatter(
+    stackTraceBeginIndex,
+  );
+
   static const topLeftCorner = '┌';
   static const bottomLeftCorner = '└';
   static const middleCorner = '├';
@@ -54,12 +79,6 @@ class PrettyPrinter extends LogPrinter {
     Level.wtf: '👾 ',
   };
 
-  static DateTime? _startTime;
-
-  /// The index which to begin the stack trace at
-  ///
-  /// This can be useful if, for instance, Logger is wrapped in another class and
-  /// you wish to remove these wrapped calls from stack trace
   final int stackTraceBeginIndex;
   final int methodCount;
   final int errorMethodCount;
@@ -68,12 +87,8 @@ class PrettyPrinter extends LogPrinter {
   final bool printEmojis;
   final bool printTime;
 
-  /// To prevent ascii 'boxing' of any log [Level] include the level in map for excludeBox,
-  /// for example to prevent boxing of [Level.verbose] and [Level.info] use excludeBox:{Level.verbose:true, Level.info:true}
   final Map<Level, bool> excludeBox;
 
-  /// To make the default for every level to prevent boxing entirely set [noBoxingByDefault] to true
-  /// (boxing can still be turned on for some levels by using something like excludeBox:{Level.error:false} )
   final bool noBoxingByDefault;
 
   late final Map<Level, bool> includeBox;
@@ -82,38 +97,6 @@ class PrettyPrinter extends LogPrinter {
   String _middleBorder = '';
   String _bottomBorder = '';
 
-  PrettyPrinter({
-    this.stackTraceBeginIndex = 0,
-    this.methodCount = 2,
-    this.errorMethodCount = 3,
-    this.lineLength = 120,
-    this.colors = true,
-    this.printEmojis = true,
-    this.printTime = true,
-    this.excludeBox = const {},
-    this.noBoxingByDefault = false,
-  }) {
-    _startTime ??= DateTime.now();
-
-    var doubleDividerLine = StringBuffer();
-    var singleDividerLine = StringBuffer();
-    for (var i = 0; i < lineLength - 1; i++) {
-      doubleDividerLine.write(doubleDivider);
-      singleDividerLine.write(singleDivider);
-    }
-
-    _topBorder = '$topLeftCorner$doubleDividerLine';
-    _middleBorder = '$middleCorner$singleDividerLine';
-    _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
-
-    // Translate excludeBox map (constant if default) to includeBox map with all Level enum possibilities
-    includeBox = {};
-    for (var l in Level.values) {
-      includeBox[l] = !noBoxingByDefault;
-    }
-    excludeBox.forEach((k, v) => includeBox[k] = !v);
-  }
-
   @override
   List<String> log(LogEvent event) {
     var messageStr = stringifyMessage(event.message);
@@ -121,23 +104,23 @@ class PrettyPrinter extends LogPrinter {
     String? stackTraceStr;
     if (event.stackTrace == null) {
       if (methodCount > 0) {
-        stackTraceStr = StackTraceFormatter.format(
+        stackTraceStr = stackTraceFormatter.format(
           StackTrace.current,
           methodCount,
         );
       }
     } else if (errorMethodCount > 0) {
-      stackTraceStr = StackTraceFormatter.format(
+      stackTraceStr = stackTraceFormatter.format(
         event.stackTrace,
         errorMethodCount,
       );
     }
 
-    var errorStr = event.error?.toString();
+    String? errorStr = event.error?.toString();
 
     String? timeStr;
     if (printTime) {
-      timeStr = getTime();
+      timeStr = logTimeFormatter.getLogTime();
     }
 
     return _formatAndPrint(
@@ -147,27 +130,6 @@ class PrettyPrinter extends LogPrinter {
       errorStr,
       stackTraceStr,
     );
-  }
-
-  String getTime() {
-    String _threeDigits(int n) {
-      if (n >= 100) return '$n';
-      if (n >= 10) return '0$n';
-      return '00$n';
-    }
-
-    String _twoDigits(int n) {
-      if (n >= 10) return '$n';
-      return '0$n';
-    }
-
-    var now = DateTime.now();
-    var h = _twoDigits(now.hour);
-    var min = _twoDigits(now.minute);
-    var sec = _twoDigits(now.second);
-    var ms = _threeDigits(now.millisecond);
-    var timeSinceStart = now.difference(_startTime!).toString();
-    return '$h:$min:$sec.$ms (+$timeSinceStart)';
   }
 
   // Handles any object that is causing JsonEncoder() problems
@@ -220,8 +182,6 @@ class PrettyPrinter extends LogPrinter {
     String? error,
     String? stacktrace,
   ) {
-    // This code is non trivial and a type annotation here helps understanding.
-    // ignore: omit_local_variable_types
     List<String> buffer = [];
     var verticalLineAtLevel = (includeBox[level]!) ? ('$verticalLine ') : '';
     var color = _getLevelColor(level);

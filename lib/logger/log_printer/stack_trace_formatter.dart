@@ -1,5 +1,7 @@
 class StackTraceFormatter {
-  //const StackTraceFormatter(this.stackTraceBeginIndex);
+  const StackTraceFormatter(this.stackTraceBeginIndex);
+
+  final int stackTraceBeginIndex;
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   /// For example:
@@ -19,33 +21,6 @@ class StackTraceFormatter {
   /// package:logger/src/logger.dart
   static final _browserStackTraceRegex =
       RegExp(r'^(?:package:)?(dart:[^\s]+|[^\s]+)');
-
-  static String? format(StackTrace? stackTrace, int methodCount) {
-    var lines = stackTrace.toString().split('\n');
-    // if (stackTraceBeginIndex > 0 && stackTraceBeginIndex < lines.length - 1) {
-    //   lines = lines.sublist(stackTraceBeginIndex);
-    // }
-    var formatted = <String>[];
-    var count = 0;
-    for (var line in lines) {
-      if (_discardDeviceStacktraceLine(line) ||
-          _discardWebStacktraceLine(line) ||
-          _discardBrowserStacktraceLine(line) ||
-          line.isEmpty) {
-        continue;
-      }
-      formatted.add('#$count   ${line.replaceFirst(RegExp(r'#\d+\s+'), '')}');
-      if (++count == methodCount) {
-        break;
-      }
-    }
-
-    if (formatted.isEmpty) {
-      return null;
-    } else {
-      return formatted.join('\n');
-    }
-  }
 
   static bool _discardDeviceStacktraceLine(String line) {
     var match = _deviceStackTraceRegex.matchAsPrefix(line);
@@ -71,5 +46,32 @@ class StackTraceFormatter {
     }
     return match.group(1)!.startsWith('package:logger') ||
         match.group(1)!.startsWith('dart:');
+  }
+
+  String? format(StackTrace? stackTrace, int methodCount) {
+    var lines = stackTrace.toString().split('\n');
+    if (stackTraceBeginIndex > 0 && stackTraceBeginIndex < lines.length - 1) {
+      lines = lines.sublist(stackTraceBeginIndex);
+    }
+    var formatted = <String>[];
+    var count = 0;
+    for (var line in lines) {
+      if (_discardDeviceStacktraceLine(line) ||
+          _discardWebStacktraceLine(line) ||
+          _discardBrowserStacktraceLine(line) ||
+          line.isEmpty) {
+        continue;
+      }
+      formatted.add('#$count   ${line.replaceFirst(RegExp(r'#\d+\s+'), '')}');
+      if (++count == methodCount) {
+        break;
+      }
+    }
+
+    if (formatted.isEmpty) {
+      return null;
+    } else {
+      return formatted.join('\n');
+    }
   }
 }
