@@ -1,6 +1,6 @@
-import 'log_level.dart';
+import '../../support/log_level.dart';
 
-import '../ansi_color.dart';
+import '../../support/ansi_color.dart';
 
 class LogFormatter {
   LogFormatter({

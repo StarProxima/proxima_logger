@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import '../proxima_logger.dart';
-import 'log_formatter.dart';
-import 'stack_trace_formatter.dart';
-import 'time_formatter.dart';
+import '../support/log_event.dart';
+import 'formatters/log_formatter.dart';
+import 'formatters/stack_trace_formatter.dart';
+import 'formatters/time_formatter.dart';
 
 abstract class LogPrinter {
   void init() {}
@@ -39,6 +39,22 @@ class PrettyPrinter extends LogPrinter {
   final int errorMethodCount;
   final bool printEmojis;
   final bool printTime;
+
+  // Handles any object that is causing JsonEncoder() problems
+  Object toEncodableFallback(dynamic object) {
+    return object.toString();
+  }
+
+  String stringifyMessage(dynamic message) {
+    final finalMessage = message is Function ? message() : message;
+    if (finalMessage is Map || finalMessage is Iterable) {
+      var encoder = JsonEncoder.withIndent('  ', toEncodableFallback);
+      return encoder.convert(finalMessage);
+    } else {
+      return finalMessage.toString();
+    }
+  }
+
   @override
   List<String> log(LogEvent event) {
     var messageStr = stringifyMessage(event.message);
@@ -72,20 +88,5 @@ class PrettyPrinter extends LogPrinter {
       errorStr,
       stackTraceStr,
     );
-  }
-
-  // Handles any object that is causing JsonEncoder() problems
-  Object toEncodableFallback(dynamic object) {
-    return object.toString();
-  }
-
-  String stringifyMessage(dynamic message) {
-    final finalMessage = message is Function ? message() : message;
-    if (finalMessage is Map || finalMessage is Iterable) {
-      var encoder = JsonEncoder.withIndent('  ', toEncodableFallback);
-      return encoder.convert(finalMessage);
-    } else {
-      return finalMessage.toString();
-    }
   }
 }
