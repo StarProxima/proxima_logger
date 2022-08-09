@@ -1,9 +1,9 @@
 import 'support/log_event.dart';
 
 import 'log_printer/log_printer.dart';
-import 'support/log_level.dart';
+import 'support/log_type.dart';
 import 'support/log_output.dart';
-export 'support/log_level.dart';
+export 'support/log_type.dart';
 
 final logger = ProximaLogger();
 
@@ -11,17 +11,18 @@ class ProximaLogger {
   final LogPrinter _printer = PrettyPrinter();
   final LogOutput _output = ConsoleOutput();
   void log(
-    Lvl level,
     dynamic message, [
+    LogType type = LogType.info,
+    String? title,
     dynamic error,
     StackTrace? stackTrace,
   ]) {
-    var logEvent = LogEvent(level, message, error, stackTrace);
+    var logEvent = LogEvent(message, type, title, error, stackTrace);
 
     var output = _printer.log(logEvent);
 
     if (output.isNotEmpty) {
-      OutputEvent outputEvent = OutputEvent(level, output);
+      OutputEvent outputEvent = OutputEvent(type, output);
       try {
         _output.output(outputEvent);
       } catch (e, s) {

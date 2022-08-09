@@ -1,7 +1,7 @@
-import 'log_level.dart';
+import 'log_type.dart';
 
 class OutputEvent {
-  final Lvl level;
+  final LogType level;
   final List<String> lines;
 
   OutputEvent(this.level, this.lines);

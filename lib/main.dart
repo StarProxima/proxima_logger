@@ -37,34 +37,46 @@ class _HomePageState extends State<HomePage> {
           children: [
             ElevatedButton(
               onPressed: () {
-                logger.log(Lvl.info, 'message0');
-                log('message0');
+                logger.log(
+                  'info',
+                  LogType.info,
+                );
+                log('info');
               },
-              child: const Text('Button0'),
+              child: const Text('info'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(Lvl.debug, 'message1');
-                log('message1');
+                logger.log(
+                  'debug',
+                  LogType.debug,
+                );
+                log('debug');
               },
-              child: const Text('Button1'),
+              child: const Text('debug'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(Lvl.error, 'message2');
-                log('message2');
+                logger.log(
+                  'error',
+                  LogType.error,
+                );
+                log('error');
               },
-              child: const Text('Button2'),
+              child: const Text('error'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(Lvl.wtf, 'message3');
-                log('message3');
+                logger.log(
+                  'wtf',
+                  LogType.wtf,
+                );
+                log('wtf');
               },
-              child: const Text('Button3'),
+              child: const Text('wtf'),
             ),
             const SizedBox(height: 10),
             const LargeNestingWidget(),

@@ -82,7 +82,7 @@ class PrettyPrinter extends LogPrinter {
     }
 
     return logFormatter.format(
-      event.level,
+      event.type,
       messageStr,
       timeStr,
       errorStr,

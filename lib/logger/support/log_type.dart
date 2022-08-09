@@ -1,4 +1,4 @@
-enum Lvl {
+enum LogType {
   verbose,
   debug,
   info,

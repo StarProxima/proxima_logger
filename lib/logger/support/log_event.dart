@@ -1,10 +1,11 @@
-import 'log_level.dart';
+import 'log_type.dart';
 
 class LogEvent {
-  final Lvl level;
   final dynamic message;
+  final LogType type;
+  final String? title;
   final dynamic error;
   final StackTrace? stackTrace;
 
-  LogEvent(this.level, this.message, this.error, this.stackTrace);
+  LogEvent(this.message, this.type, this.title, this.error, this.stackTrace);
 }

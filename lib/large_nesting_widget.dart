@@ -22,7 +22,10 @@ class LargeNestingWidget extends StatelessWidget {
   Widget _fun3() {
     return ElevatedButton(
       onPressed: () {
-        logger.log(Lvl.wtf, 'LargeNestingWidget');
+        logger.log(
+          'LargeNestingWidget',
+          LogType.wtf,
+        );
         log('LargeNestingWidget');
       },
       child: const Text('LargeNestingWidget'),

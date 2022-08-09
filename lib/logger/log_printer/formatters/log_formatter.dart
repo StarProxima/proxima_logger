@@ -1,4 +1,4 @@
-import '../../support/log_level.dart';
+import '../../support/log_type.dart';
 
 import '../../support/ansi_color.dart';
 
@@ -21,7 +21,7 @@ class LogFormatter {
     _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
 
     includeBox = {};
-    for (var l in Lvl.values) {
+    for (var l in LogType.values) {
       includeBox[l] = !noBoxingByDefault;
     }
     excludeBox.forEach((k, v) => includeBox[k] = !v);
@@ -30,10 +30,10 @@ class LogFormatter {
   final int lineLength;
   final bool colors;
 
-  final Map<Lvl, bool> excludeBox;
+  final Map<LogType, bool> excludeBox;
   final bool noBoxingByDefault;
 
-  late final Map<Lvl, bool> includeBox;
+  late final Map<LogType, bool> includeBox;
 
   String _topBorder = '';
   String _middleBorder = '';
@@ -47,24 +47,24 @@ class LogFormatter {
   static const singleDivider = '┄';
 
   static final levelColors = {
-    Lvl.verbose: AnsiColor.fg(AnsiColor.grey(0.5)),
-    Lvl.debug: AnsiColor.none(),
-    Lvl.info: AnsiColor.fg(12),
-    Lvl.warning: AnsiColor.fg(208),
-    Lvl.error: AnsiColor.fg(196),
-    Lvl.wtf: AnsiColor.fg(199),
+    LogType.verbose: AnsiColor.fg(AnsiColor.grey(0.5)),
+    LogType.debug: AnsiColor.none(),
+    LogType.info: AnsiColor.fg(12),
+    LogType.warning: AnsiColor.fg(208),
+    LogType.error: AnsiColor.fg(196),
+    LogType.wtf: AnsiColor.fg(199),
   };
 
   static final levelEmojis = {
-    Lvl.verbose: '',
-    Lvl.debug: '🐛 ',
-    Lvl.info: '💡 ',
-    Lvl.warning: '⚠️ ',
-    Lvl.error: '⛔ ',
-    Lvl.wtf: '👾 ',
+    LogType.verbose: '',
+    LogType.debug: '🐛 ',
+    LogType.info: '💡 ',
+    LogType.warning: '⚠️ ',
+    LogType.error: '⛔ ',
+    LogType.wtf: '👾 ',
   };
 
-  AnsiColor _getLevelColor(Lvl level) {
+  AnsiColor _getLevelColor(LogType level) {
     if (colors) {
       return levelColors[level]!;
     } else {
@@ -72,24 +72,24 @@ class LogFormatter {
     }
   }
 
-  AnsiColor _getErrorColor(Lvl level) {
+  AnsiColor _getErrorColor(LogType level) {
     if (colors) {
-      if (level == Lvl.wtf) {
-        return levelColors[Lvl.wtf]!.toBg();
+      if (level == LogType.wtf) {
+        return levelColors[LogType.wtf]!.toBg();
       } else {
-        return levelColors[Lvl.error]!.toBg();
+        return levelColors[LogType.error]!.toBg();
       }
     } else {
       return AnsiColor.none();
     }
   }
 
-  String _getEmoji(Lvl level) {
+  String _getEmoji(LogType level) {
     return levelEmojis[level]!;
   }
 
   List<String> format(
-    Lvl level,
+    LogType level,
     String message,
     String? time,
     String? error,
