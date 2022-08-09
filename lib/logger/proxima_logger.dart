@@ -1,19 +1,11 @@
+import 'log_printer/log_level.dart';
 import 'log_printer/log_printer.dart';
+export 'log_printer/log_level.dart';
 
 final logger = ProximaLogger();
 
-enum Level {
-  verbose,
-  debug,
-  info,
-  warning,
-  error,
-  wtf,
-  nothing,
-}
-
 class LogEvent {
-  final Level level;
+  final Lvl level;
   final dynamic message;
   final dynamic error;
   final StackTrace? stackTrace;
@@ -25,7 +17,7 @@ class ProximaLogger {
   final LogPrinter _printer = PrettyPrinter();
   final LogOutput _output = ConsoleOutput();
   void log(
-    Level level,
+    Lvl level,
     dynamic message, [
     dynamic error,
     StackTrace? stackTrace,
@@ -49,7 +41,7 @@ class ProximaLogger {
 }
 
 class OutputEvent {
-  final Level level;
+  final Lvl level;
   final List<String> lines;
 
   OutputEvent(this.level, this.lines);

@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             ElevatedButton(
               onPressed: () {
-                logger.log(Level.info, 'message0');
+                logger.log(Lvl.info, 'message0');
                 log('message0');
               },
               child: const Text('Button0'),
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(Level.debug, 'message1');
+                logger.log(Lvl.debug, 'message1');
                 log('message1');
               },
               child: const Text('Button1'),
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(Level.error, 'message2');
+                logger.log(Lvl.error, 'message2');
                 log('message2');
               },
               child: const Text('Button2'),
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(Level.wtf, 'message3');
+                logger.log(Lvl.wtf, 'message3');
                 log('message3');
               },
               child: const Text('Button3'),
