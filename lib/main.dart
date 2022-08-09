@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import 'large_nesting_widget.dart';
 import 'logger/proxima_logger.dart';
 
 void main() {
@@ -27,7 +28,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  ProximaLogger logger = ProximaLogger();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +66,8 @@ class _HomePageState extends State<HomePage> {
               },
               child: const Text('Button3'),
             ),
+            const SizedBox(height: 10),
+            const LargeNestingWidget(),
           ],
         ),
       ),

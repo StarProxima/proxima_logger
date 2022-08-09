@@ -1,4 +1,6 @@
-import 'log_printer.dart';
+import 'log_printer/log_printer.dart';
+
+final logger = ProximaLogger();
 
 enum Level {
   verbose,
