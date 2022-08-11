@@ -1,4 +1,4 @@
-import 'ansi_color.dart';
+import 'ansi_pen.dart';
 
 enum LogType implements LogTypeInterface {
   verbose,
@@ -30,7 +30,7 @@ enum LogType implements LogTypeInterface {
   }
 
   @override
-  String? get emoji {
+  String get emoji {
     switch (this) {
       case LogType.verbose:
         return '';
@@ -45,12 +45,12 @@ enum LogType implements LogTypeInterface {
       case LogType.wtf:
         return '👾';
       default:
-        return null;
+        return '';
     }
   }
 
   @override
-  AnsiPen? get color {
+  AnsiPen get ansiPen {
     switch (this) {
       case LogType.verbose:
         return AnsiPen(AnsiPen.grey(0.5));
@@ -70,14 +70,14 @@ enum LogType implements LogTypeInterface {
   }
 
   @override
-  AnsiPen? get colorOnBackground {
+  AnsiPen get ansiPenOnBackground {
     return AnsiPen.white();
   }
 }
 
 abstract class LogTypeInterface {
   String get label;
-  String? get emoji;
-  AnsiPen? get color;
-  AnsiPen? get colorOnBackground;
+  String get emoji;
+  AnsiPen get ansiPen;
+  AnsiPen get ansiPenOnBackground;
 }

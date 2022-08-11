@@ -2,7 +2,7 @@
 
 import '../../support/log_type.dart';
 
-import '../../support/ansi_color.dart';
+import '../../support/ansi_pen.dart';
 
 class LogFormatter {
   LogFormatter({
@@ -88,12 +88,15 @@ class LogFormatter {
   ) {
     List<String> buffer = [];
     var verticalLineAtLevel = (includeBox[type]!) ? ('$verticalLine ') : '';
-    AnsiPen pen = type.color ?? AnsiPen.none();
+    AnsiPen pen = type.ansiPen;
+    AnsiPen penOnBg = type.ansiPenOnBackground;
     // if (includeBox[level]!) buffer.add(color(_topBorder));
 
     if (title != null) {
       buffer.add(
-        pen.fg('$topLeftCorner┤ $title'),
+        pen.fg(
+          '$topLeftCorner┤ $title',
+        ),
       );
       //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
@@ -103,9 +106,9 @@ class LogFormatter {
         buffer.add(
           pen.fg(verticalLineAtLevel) +
               pen.resetForeground +
-              (pen.color != null
-                  ? pen.bg((type.colorOnBackground ?? AnsiPen.none()).fg(line))
-                  : line) +
+              pen.bg(
+                pen.isNotNone ? penOnBg.fg(line) : line,
+              ) +
               pen.resetBackground,
         );
       }

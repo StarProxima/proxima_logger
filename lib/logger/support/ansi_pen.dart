@@ -8,12 +8,13 @@ class AnsiPen {
 
   final int? color;
 
+  bool get isNotNone => color != null;
+
   /// ANSI Control Sequence Introducer, signals the terminal for new settings.
   static const ansiEsc = '\x1B[';
 
   /// Reset all colors and options for current SGRs to terminal defaults.
   static const ansiDefault = '${ansiEsc}0m';
-  static const ansiInverse = '${ansiEsc}27m';
 
   String fg(String msg) {
     if (color != null) {
