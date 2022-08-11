@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
                   'debug',
                   LogType.debug,
                   'Title',
+                  Exception('Error'),
                 );
               },
               child: const Text('debug'),
@@ -72,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                   'wtf',
                   LogType.wtf,
                   'Title',
+                  Exception('Error'),
                 );
               },
               child: const Text('wtf'),

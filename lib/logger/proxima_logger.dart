@@ -14,7 +14,7 @@ class ProximaLogger {
   final LogOutput _output = ConsoleOutput();
   void log(
     dynamic message, [
-    LogType type = LogType.info,
+    LogTypeInterface type = LogType.info,
     String? title,
     dynamic error,
     StackTrace? stackTrace,

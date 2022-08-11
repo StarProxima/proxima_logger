@@ -48,59 +48,55 @@ class LogFormatter {
   static const doubleDivider = '─';
   static const singleDivider = '┄';
 
-  static final levelColors = {
-    LogType.verbose: AnsiColor.fg(AnsiColor.grey(0.5)),
-    LogType.debug: AnsiColor.none(),
-    LogType.info: AnsiColor.fg(12),
-    LogType.warning: AnsiColor.fg(208),
-    LogType.error: AnsiColor.fg(196),
-    LogType.wtf: AnsiColor.fg(199),
-  };
+  // static final levelColors = {
+  //   LogType.verbose: AnsiColor.fg(AnsiColor.grey(0.5)),
+  //   LogType.debug: AnsiColor.none(),
+  //   LogType.info: AnsiColor.fg(12),
+  //   LogType.warning: AnsiColor.fg(208),
+  //   LogType.error: AnsiColor.fg(196),
+  //   LogType.wtf: AnsiColor.fg(199),
+  // };
 
-  static final levelEmojis = {
-    LogType.verbose: '',
-    LogType.debug: '🐛',
-    LogType.info: '💡',
-    LogType.warning: '⚠️',
-    LogType.error: '⛔',
-    LogType.wtf: '👾',
-  };
+  // static final levelEmojis = {
+  //   LogType.verbose: '',
+  //   LogType.debug: '🐛',
+  //   LogType.info: '💡',
+  //   LogType.warning: '⚠️',
+  //   LogType.error: '⛔',
+  //   LogType.wtf: '👾',
+  // };
 
-  AnsiColor _getLevelColor(LogType level) {
+  // AnsiColor _getLevelColor(LogType level) {
+  //   if (colors) {
+  //     return levelColors[level]!;
+  //   } else {
+  //     return AnsiColor.none();
+  //   }
+  // }
+
+  AnsiColor _getErrorColor(LogTypeInterface type) {
     if (colors) {
-      return levelColors[level]!;
+      return type.color.toBg();
     } else {
       return AnsiColor.none();
     }
   }
 
-  AnsiColor _getErrorColor(LogType level) {
-    if (colors) {
-      if (level == LogType.wtf) {
-        return levelColors[LogType.wtf]!.toBg();
-      } else {
-        return levelColors[LogType.error]!.toBg();
-      }
-    } else {
-      return AnsiColor.none();
-    }
-  }
-
-  String _getEmoji(LogType level) {
-    return levelEmojis[level]!;
-  }
+  // String _getEmoji(LogType level) {
+  //   return levelEmojis[level]!;
+  // }
 
   List<String> format(
-    LogType level,
     String message,
+    LogTypeInterface type,
     String? title,
     String? time,
     String? error,
     String? stacktrace,
   ) {
     List<String> buffer = [];
-    var verticalLineAtLevel = (includeBox[level]!) ? ('$verticalLine ') : '';
-    var color = _getLevelColor(level);
+    var verticalLineAtLevel = (includeBox[type]!) ? ('$verticalLine ') : '';
+    AnsiColor color = type.color;
     // if (includeBox[level]!) buffer.add(color(_topBorder));
 
     if (title != null) {
@@ -111,12 +107,12 @@ class LogFormatter {
     }
 
     if (error != null) {
-      var errorColor = _getErrorColor(level);
+      var errorColor = _getErrorColor(type);
       for (var line in error.split('\n')) {
         buffer.add(
           color(verticalLineAtLevel) +
               errorColor.resetForeground +
-              errorColor(line) +
+              type.color(line) +
               errorColor.resetBackground,
         );
       }
@@ -138,7 +134,7 @@ class LogFormatter {
     for (var line in message.split('\n')) {
       buffer.add(color('$verticalLineAtLevel$line'));
     }
-    if (includeBox[level]!) buffer.add(color(_bottomBorder));
+    if (includeBox[type]!) buffer.add(color(_bottomBorder));
 
     return buffer;
   }
