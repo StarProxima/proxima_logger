@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'support/log_event.dart';
 
 import 'log_printer/log_printer.dart';

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'large_nesting_widget.dart';
@@ -41,7 +39,6 @@ class _HomePageState extends State<HomePage> {
                   'info',
                   LogType.info,
                 );
-                log('info');
               },
               child: const Text('info'),
             ),
@@ -51,8 +48,8 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   'debug',
                   LogType.debug,
+                  'Title',
                 );
-                log('debug');
               },
               child: const Text('debug'),
             ),
@@ -62,8 +59,9 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   'error',
                   LogType.error,
+                  'Title',
+                  Exception('Error'),
                 );
-                log('error');
               },
               child: const Text('error'),
             ),
@@ -73,8 +71,8 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   'wtf',
                   LogType.wtf,
+                  'Title',
                 );
-                log('wtf');
               },
               child: const Text('wtf'),
             ),

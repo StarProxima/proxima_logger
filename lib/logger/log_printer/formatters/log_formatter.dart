@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import '../../support/log_type.dart';
 
 import '../../support/ansi_color.dart';
@@ -57,11 +59,11 @@ class LogFormatter {
 
   static final levelEmojis = {
     LogType.verbose: '',
-    LogType.debug: '🐛 ',
-    LogType.info: '💡 ',
-    LogType.warning: '⚠️ ',
-    LogType.error: '⛔ ',
-    LogType.wtf: '👾 ',
+    LogType.debug: '🐛',
+    LogType.info: '💡',
+    LogType.warning: '⚠️',
+    LogType.error: '⛔',
+    LogType.wtf: '👾',
   };
 
   AnsiColor _getLevelColor(LogType level) {
@@ -91,6 +93,7 @@ class LogFormatter {
   List<String> format(
     LogType level,
     String message,
+    String? title,
     String? time,
     String? error,
     String? stacktrace,
@@ -98,7 +101,14 @@ class LogFormatter {
     List<String> buffer = [];
     var verticalLineAtLevel = (includeBox[level]!) ? ('$verticalLine ') : '';
     var color = _getLevelColor(level);
-    if (includeBox[level]!) buffer.add(color(_topBorder));
+    // if (includeBox[level]!) buffer.add(color(_topBorder));
+
+    if (title != null) {
+      buffer.add(
+        color('$topLeftCorner┤ $title'),
+      );
+      //if (includeBox[level]!) buffer.add(color(_middleBorder));
+    }
 
     if (error != null) {
       var errorColor = _getErrorColor(level);
@@ -110,24 +120,23 @@ class LogFormatter {
               errorColor.resetBackground,
         );
       }
-      if (includeBox[level]!) buffer.add(color(_middleBorder));
+      // if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     if (stacktrace != null) {
       for (var line in stacktrace.split('\n')) {
         buffer.add(color('$verticalLineAtLevel$line'));
       }
-      if (includeBox[level]!) buffer.add(color(_middleBorder));
+      //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     if (time != null) {
       buffer.add(color('$verticalLineAtLevel$time'));
-      if (includeBox[level]!) buffer.add(color(_middleBorder));
+      //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
-    var emoji = _getEmoji(level);
     for (var line in message.split('\n')) {
-      buffer.add(color('$verticalLineAtLevel$emoji$line'));
+      buffer.add(color('$verticalLineAtLevel$line'));
     }
     if (includeBox[level]!) buffer.add(color(_bottomBorder));
 

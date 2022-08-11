@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../support/log_event.dart';
+import '../support/log_type.dart';
 import 'formatters/log_formatter.dart';
 import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
@@ -40,6 +41,15 @@ class PrettyPrinter extends LogPrinter {
   final bool printEmojis;
   final bool printTime;
 
+  static final levelEmojis = {
+    LogType.verbose: '',
+    LogType.debug: '🐛',
+    LogType.info: '💡',
+    LogType.warning: '⚠️',
+    LogType.error: '⛔',
+    LogType.wtf: '👾',
+  };
+
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
     return object.toString();
@@ -74,16 +84,20 @@ class PrettyPrinter extends LogPrinter {
       );
     }
 
-    String? errorStr = event.error?.toString();
+    String titleStr =
+        '${printEmojis ? levelEmojis[event.type]! : ''}[${event.type.name.toUpperCase()}] ${event.title ?? ''}';
 
     String? timeStr;
     if (printTime) {
       timeStr = logTimeFormatter.getLogTime();
     }
 
+    String? errorStr = event.error?.toString();
+
     return logFormatter.format(
       event.type,
       messageStr,
+      titleStr,
       timeStr,
       errorStr,
       stackTraceStr,
