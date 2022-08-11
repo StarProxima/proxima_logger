@@ -74,14 +74,6 @@ class LogFormatter {
   //   }
   // }
 
-  AnsiColor _getErrorColor(LogTypeInterface type) {
-    if (colors) {
-      return type.color.toBg();
-    } else {
-      return AnsiColor.none();
-    }
-  }
-
   // String _getEmoji(LogType level) {
   //   return levelEmojis[level]!;
   // }
@@ -96,24 +88,25 @@ class LogFormatter {
   ) {
     List<String> buffer = [];
     var verticalLineAtLevel = (includeBox[type]!) ? ('$verticalLine ') : '';
-    AnsiColor color = type.color;
+    AnsiPen pen = type.color ?? AnsiPen.none();
     // if (includeBox[level]!) buffer.add(color(_topBorder));
 
     if (title != null) {
       buffer.add(
-        color('$topLeftCorner┤ $title'),
+        pen.fg('$topLeftCorner┤ $title'),
       );
       //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     if (error != null) {
-      var errorColor = _getErrorColor(type);
       for (var line in error.split('\n')) {
         buffer.add(
-          color(verticalLineAtLevel) +
-              errorColor.resetForeground +
-              type.color(line) +
-              errorColor.resetBackground,
+          pen.fg(verticalLineAtLevel) +
+              pen.resetForeground +
+              (pen.color != null
+                  ? pen.bg((type.colorOnBackground ?? AnsiPen.none()).fg(line))
+                  : line) +
+              pen.resetBackground,
         );
       }
       // if (includeBox[level]!) buffer.add(color(_middleBorder));
@@ -121,20 +114,20 @@ class LogFormatter {
 
     if (stacktrace != null) {
       for (var line in stacktrace.split('\n')) {
-        buffer.add(color('$verticalLineAtLevel$line'));
+        buffer.add(pen.fg('$verticalLineAtLevel$line'));
       }
       //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     if (time != null) {
-      buffer.add(color('$verticalLineAtLevel$time'));
+      buffer.add(pen.fg('$verticalLineAtLevel$time'));
       //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
 
     for (var line in message.split('\n')) {
-      buffer.add(color('$verticalLineAtLevel$line'));
+      buffer.add(pen.fg('$verticalLineAtLevel$line'));
     }
-    if (includeBox[type]!) buffer.add(color(_bottomBorder));
+    if (includeBox[type]!) buffer.add(pen.fg(_bottomBorder));
 
     return buffer;
   }

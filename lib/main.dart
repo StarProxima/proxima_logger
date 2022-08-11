@@ -38,6 +38,8 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   'info',
                   LogType.info,
+                  'Title',
+                  Exception('Error'),
                 );
               },
               child: const Text('info'),
@@ -53,6 +55,18 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               child: const Text('debug'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                logger.log(
+                  'warning',
+                  LogType.warning,
+                  'Title',
+                  Exception('Error'),
+                );
+              },
+              child: const Text('warning'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
