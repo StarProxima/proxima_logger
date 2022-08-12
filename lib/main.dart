@@ -1,10 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import 'error_handler.dart';
 import 'large_nesting_widget.dart';
 import 'logger/proxima_logger.dart';
 
 void main() {
-  runApp(const MyApp());
+  runZonedGuarded(
+    () {
+      ErrorHandler.init();
+      runApp(const MyApp());
+    },
+    ErrorHandler.recordError,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -105,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                   b = !b;
                 });
               },
-              child: const Text('wtf'),
+              child: const Text('exception'),
             ),
             if (b) const LargeNestingWidget(),
           ],
