@@ -8,7 +8,13 @@ class LargeNestingWidget extends StatelessWidget {
   const LargeNestingWidget({Key? key}) : super(key: key);
 
   Widget _fun0() {
-    return _fun1();
+    try {
+      return _fun1();
+    } catch (e, s) {
+      log(s.toString());
+      logger.log('message', LogType.wtf, '_NestingWidget1', e, s);
+      return const SizedBox();
+    }
   }
 
   Widget _fun1() {
@@ -20,32 +26,15 @@ class LargeNestingWidget extends StatelessWidget {
   }
 
   Widget _fun3() {
-    return ElevatedButton(
-      onPressed: () {
-        logger.log(
-          'LargeNestingWidget',
-          LogType.wtf,
-        );
-        log('LargeNestingWidget');
-      },
-      child: const Text('LargeNestingWidget'),
+    // throw Exception('wefwefwefwef');
+    return const _NestingWidget1(
+      child: Text('LargeNestingWidget'),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _NestingWidget1(
-      child: ElevatedButton(
-        onPressed: () {
-          logger.log(
-            'LargeNestingWidget',
-            LogType.wtf,
-          );
-          log('LargeNestingWidget');
-        },
-        child: const Text('LargeNestingWidget'),
-      ),
-    );
+    return _fun0();
   }
 }
 
@@ -59,6 +48,12 @@ class _NestingWidget1 extends StatefulWidget {
 }
 
 class _NestingWidget1State extends State<_NestingWidget1> {
+  @override
+  void initState() {
+    super.initState();
+    throw Exception('_NestingWidget1');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

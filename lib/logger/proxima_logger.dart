@@ -10,7 +10,9 @@ export 'support/log_type.dart';
 final logger = ProximaLogger();
 
 class ProximaLogger {
-  final LogPrinter _printer = PrettyPrinter();
+  final LogPrinter _printer = PrettyPrinter(
+    logTypes: LogType.values,
+  );
   final LogOutput _output = ConsoleOutput();
   void log(
     dynamic message, [

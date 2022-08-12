@@ -1,15 +1,14 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
-import '../../support/log_type.dart';
-
 import '../../support/ansi_pen.dart';
+import '../../support/log_type.dart';
 
 class LogFormatter {
   LogFormatter({
     this.lineLength = 120,
     this.colors = true,
     this.excludeBox = const {},
-    this.noBoxingByDefault = false,
+    required this.includeBox,
   }) {
     var doubleDividerLine = StringBuffer();
     var singleDividerLine = StringBuffer();
@@ -21,21 +20,14 @@ class LogFormatter {
     _topBorder = '$topLeftCorner$doubleDividerLine';
     _middleBorder = '$middleCorner$singleDividerLine';
     _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
-
-    includeBox = {};
-    for (var l in LogType.values) {
-      includeBox[l] = !noBoxingByDefault;
-    }
-    excludeBox.forEach((k, v) => includeBox[k] = !v);
   }
 
   final int lineLength;
   final bool colors;
 
-  final Map<LogType, bool> excludeBox;
-  final bool noBoxingByDefault;
+  final Map<LogTypeInterface, bool> excludeBox;
 
-  late final Map<LogType, bool> includeBox;
+  final Map<LogTypeInterface, bool> includeBox;
 
   String _topBorder = '';
   String _middleBorder = '';

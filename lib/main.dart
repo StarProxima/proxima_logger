@@ -26,6 +26,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool b = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,12 +72,17 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                logger.log(
-                  'error',
-                  LogType.error,
-                  'Title',
-                  Exception('Error'),
-                );
+                try {
+                  throw Exception('Error');
+                } catch (e, s) {
+                  logger.log(
+                    'error',
+                    LogType.error,
+                    'Title',
+                    e,
+                    s,
+                  );
+                }
               },
               child: const Text('error'),
             ),
@@ -93,7 +99,15 @@ class _HomePageState extends State<HomePage> {
               child: const Text('wtf'),
             ),
             const SizedBox(height: 10),
-            const LargeNestingWidget(),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  b = !b;
+                });
+              },
+              child: const Text('wtf'),
+            ),
+            if (b) const LargeNestingWidget(),
           ],
         ),
       ),

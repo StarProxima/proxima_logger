@@ -1,9 +1,5 @@
-import 'dart:developer';
-
 class StackTraceFormatter {
-  const StackTraceFormatter([this.stackTraceBeginIndex = 0]);
-
-  final int stackTraceBeginIndex;
+  const StackTraceFormatter();
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   /// For example:
@@ -51,11 +47,14 @@ class StackTraceFormatter {
         match.group(1)!.startsWith('dart:');
   }
 
-  String? format(StackTrace? stackTrace, int methodCount) {
-    log('format');
+  String? format(
+    StackTrace? stackTrace,
+    int methodCount, [
+    int beginIndex = 0,
+  ]) {
     var lines = stackTrace.toString().split('\n');
-    if (stackTraceBeginIndex > 0 && stackTraceBeginIndex < lines.length - 1) {
-      lines = lines.sublist(stackTraceBeginIndex);
+    if (beginIndex > 0 && beginIndex < lines.length - 1) {
+      lines = lines.sublist(beginIndex);
     }
     var formatted = <String>[];
     var count = 0;

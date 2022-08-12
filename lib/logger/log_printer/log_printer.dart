@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../proxima_logger.dart';
 import '../support/log_event.dart';
 import 'formatters/log_formatter.dart';
 import 'formatters/stack_trace_formatter.dart';
@@ -15,9 +16,10 @@ abstract class LogPrinter {
 
 class PrettyPrinter extends LogPrinter {
   PrettyPrinter({
+    required this.logTypes,
     this.stackTraceBeginIndex = 2,
     this.methodCount = 2,
-    this.errorMethodCount = 3,
+    this.errorMethodCount = 8,
     this.printTime = true,
     this.printEmojis = true,
   });
@@ -28,12 +30,13 @@ class PrettyPrinter extends LogPrinter {
     _startTime,
   );
 
-  late StackTraceFormatter stackTraceFormatter = StackTraceFormatter(
-    stackTraceBeginIndex,
+  late StackTraceFormatter stackTraceFormatter = const StackTraceFormatter();
+
+  late LogFormatter logFormatter = LogFormatter(
+    includeBox: {for (var type in logTypes) type: true},
   );
 
-  LogFormatter logFormatter = LogFormatter();
-
+  List<LogTypeInterface> logTypes;
   final int stackTraceBeginIndex;
   final int methodCount;
   final int errorMethodCount;
@@ -65,6 +68,7 @@ class PrettyPrinter extends LogPrinter {
         stackTraceStr = stackTraceFormatter.format(
           StackTrace.current,
           methodCount,
+          stackTraceBeginIndex,
         );
       }
     } else if (errorMethodCount > 0) {
