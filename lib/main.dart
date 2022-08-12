@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'error_handler.dart';
 import 'large_nesting_widget.dart';
 import 'logger/proxima_logger.dart';
+import 'model.dart';
 
 void main() {
   runZonedGuarded(
@@ -106,6 +107,17 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               child: const Text('wtf'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                logger.log(
+                  Task.random().toMap(),
+                  LogType.info,
+                  'Title',
+                );
+              },
+              child: const Text('json'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(

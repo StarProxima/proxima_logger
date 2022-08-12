@@ -57,13 +57,13 @@ enum LogType implements LogTypeInterface {
       case LogType.debug:
         return AnsiPen.none();
       case LogType.info:
-        return AnsiPen(12);
+        return AnsiPen.white();
       case LogType.warning:
-        return AnsiPen(208);
+        return AnsiPen.orange();
       case LogType.error:
-        return AnsiPen(196);
+        return AnsiPen.red();
       case LogType.wtf:
-        return AnsiPen(199);
+        return AnsiPen.purple();
       default:
         return AnsiPen.none();
     }
@@ -71,7 +71,7 @@ enum LogType implements LogTypeInterface {
 
   @override
   AnsiPen get ansiPenOnBackground {
-    return AnsiPen.white();
+    return AnsiPen.black();
   }
 }
 

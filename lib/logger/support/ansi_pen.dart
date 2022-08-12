@@ -5,6 +5,15 @@ class AnsiPen {
   AnsiPen.none() : color = null;
 
   AnsiPen.white() : color = 255;
+  AnsiPen.black() : color = 232;
+  AnsiPen.red() : color = 196;
+  AnsiPen.orange() : color = 208;
+  AnsiPen.purple() : color = 199;
+  AnsiPen.gold() : color = 220;
+  AnsiPen.yelow() : color = 226;
+  AnsiPen.blue() : color = 39;
+  AnsiPen.navyBlue() : color = 17;
+  AnsiPen.green() : color = 40;
 
   final int? color;
 

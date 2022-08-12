@@ -78,9 +78,6 @@ class PrettyPrinter extends LogPrinter {
       );
     }
 
-    String titleStr =
-        '${printEmojis ? event.type.emoji : ''}[${event.type.label.toUpperCase()}] ${event.title ?? ''}';
-
     String? timeStr;
     if (printTime) {
       timeStr = logTimeFormatter.getLogTime();
@@ -91,7 +88,7 @@ class PrettyPrinter extends LogPrinter {
     return logFormatter.format(
       messageStr,
       event.type,
-      titleStr,
+      event.title,
       timeStr,
       errorStr,
       stackTraceStr,

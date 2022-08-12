@@ -8,6 +8,7 @@ class LogFormatter {
     this.lineLength = 120,
     this.colors = true,
     this.excludeBox = const {},
+    this.printEmoji = true,
     required this.includeBox,
   }) {
     var doubleDividerLine = StringBuffer();
@@ -25,6 +26,8 @@ class LogFormatter {
   final int lineLength;
   final bool colors;
 
+  final bool printEmoji;
+
   final Map<LogTypeInterface, bool> excludeBox;
 
   final Map<LogTypeInterface, bool> includeBox;
@@ -36,6 +39,7 @@ class LogFormatter {
   static const topLeftCorner = '┌';
   static const bottomLeftCorner = '└';
   static const middleCorner = '├';
+  static const middleTopCorner = '┤';
   static const verticalLine = '│';
   static const doubleDivider = '─';
   static const singleDivider = '┄';
@@ -84,23 +88,25 @@ class LogFormatter {
     AnsiPen penOnBg = type.ansiPenOnBackground;
     // if (includeBox[level]!) buffer.add(color(_topBorder));
 
-    if (title != null) {
-      buffer.add(
-        pen.fg(
-          '$topLeftCorner┤ $title',
-        ),
+    String messageWithBg(String msg) {
+      return pen.bg(
+        pen.isNotNone ? penOnBg.fg(msg) : msg,
       );
-      //if (includeBox[level]!) buffer.add(color(_middleBorder));
     }
+
+    buffer.add(
+      pen.fg(
+        '$topLeftCorner$middleTopCorner ${printEmoji ? type.emoji : ''}[${type.label.toUpperCase()}] ${title ?? ''}',
+      ),
+    );
+    //if (includeBox[level]!) buffer.add(color(_middleBorder));
 
     if (error != null) {
       for (var line in error.split('\n')) {
         buffer.add(
           pen.fg(verticalLineAtLevel) +
               pen.resetForeground +
-              pen.bg(
-                pen.isNotNone ? penOnBg.fg(line) : line,
-              ) +
+              messageWithBg(line) +
               pen.resetBackground,
         );
       }
