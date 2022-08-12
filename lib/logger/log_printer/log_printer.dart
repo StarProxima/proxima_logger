@@ -44,10 +44,11 @@ class PrettyPrinter extends LogPrinter {
 
   @override
   List<String> log(LogEvent event) {
-    var messageStr = stringifyMessage(event.message);
+    String? errorStr = event.error?.toString();
 
     String? stackTraceStr;
-    if (event.stackTrace == null) {
+
+    if (event.stack == null) {
       if (settings.stackTraceMethodCount > 0) {
         stackTraceStr = stackTraceFormatter.format(
           StackTrace.current,
@@ -56,25 +57,30 @@ class PrettyPrinter extends LogPrinter {
       }
     } else if (settings.errorStackTraceMethodCount > 0) {
       stackTraceStr = stackTraceFormatter.format(
-        event.stackTrace,
+        event.stack,
         isError: true,
       );
     }
 
     String? timeStr;
+
     if (settings.printTime) {
       timeStr = logTimeFormatter.getLogTime();
     }
 
-    String? errorStr = event.error?.toString();
+    String? messageStr;
+
+    if (event.message != null) {
+      messageStr = stringifyMessage(event.message);
+    }
 
     return logFormatter.format(
-      messageStr,
-      event.type,
-      event.title ?? '',
-      timeStr,
-      errorStr,
-      stackTraceStr,
+      event.log,
+      title: event.title,
+      error: errorStr,
+      stacktrace: stackTraceStr,
+      time: timeStr,
+      message: messageStr,
     );
   }
 }

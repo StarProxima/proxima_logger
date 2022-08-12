@@ -47,10 +47,9 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 logger.log(
-                  'info',
                   Log.info,
-                  'Title',
-                  Exception('Error'),
+                  title:
+                      'Крик души не покинет стены Цитадели. Перед смертью вопрос: что же я наделал? На коленях стою и разбита Скорбь. ',
                 );
               },
               child: const Text('info'),
@@ -59,10 +58,8 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 logger.log(
-                  'debug',
                   Log.debug,
-                  'Title',
-                  Exception('Error'),
+                  message: 'Debug message',
                 );
               },
               child: const Text('debug'),
@@ -71,10 +68,8 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 logger.log(
-                  'warning',
                   Log.warning,
-                  'Title',
-                  Exception('Error'),
+                  error: Exception('warning'),
                 );
               },
               child: const Text('warning'),
@@ -86,11 +81,10 @@ class _HomePageState extends State<HomePage> {
                   throw Exception('Error');
                 } catch (e, s) {
                   logger.log(
-                    'error',
                     Log.error,
-                    'Title',
-                    e,
-                    s,
+                    title: 'ElevatedButton error',
+                    error: e,
+                    stack: s,
                   );
                 }
               },
@@ -100,10 +94,7 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 logger.log(
-                  'wtf',
                   Log.wtf,
-                  'Title',
-                  Exception('Error'),
                 );
               },
               child: const Text('wtf'),
@@ -112,9 +103,9 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 logger.log(
-                  Task.random().toMap(),
-                  Log.info,
-                  'Title',
+                  Log.wtf,
+                  title: 'Task json',
+                  message: Task.random().toMap(),
                 );
               },
               child: const Text('json'),

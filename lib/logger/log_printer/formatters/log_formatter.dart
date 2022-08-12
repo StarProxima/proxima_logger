@@ -41,43 +41,46 @@ class LogFormatter {
   static const singleDivider = '┄';
 
   List<String> format(
-    String message,
-    LogType type,
+    LogType log, {
     String? title,
-    String? time,
     String? error,
     String? stacktrace,
-  ) {
+    String? time,
+    String? message,
+  }) {
     List<String> buffer = [];
     var verticalLineAtLevel =
-        (settings.includeBox[type]!) ? ('$verticalLine ') : '';
+        (settings.includeBox[log]!) ? ('$verticalLine ') : '';
 
-    AnsiPen pen = type.ansiPen;
-    AnsiPen penOnBg = type.ansiPenOnBackground;
+    AnsiPen pen = log.ansiPen;
+    AnsiPen penOnBg = log.ansiPenOnBackground;
 
     String messageWithBg(String msg) {
+      return pen.fg(msg);
       return pen.bg(
         pen.isNotNone ? penOnBg.fg(msg) : msg,
       );
     }
 
     void addMiddleBorder(LogPart part) {
-      if (settings.middleBorders[type]![part]!) {
+      if (settings.middleBorders[log]![part]!) {
         buffer.add(
           pen.fg(
-            '${settings.includeBox[type]! ? middleCorner : ''}$_middleBorder',
+            '${settings.includeBox[log]! ? middleCorner : ''}$_middleBorder',
           ),
         );
       }
     }
 
-    String emoji = settings.printEmoji ? type.emoji : '';
-    String typyLabel = '[${type.label.toUpperCase()}]';
+    String emoji = settings.printEmoji ? log.emoji : '';
+    String logTypeLabel = '[${log.label.toUpperCase()}]';
     String topLeftTitleCorner =
-        (settings.includeBox[type]!) ? '$topLeftCorner$middleTopCorner ' : '';
+        (settings.includeBox[log]!) ? '$topLeftCorner$middleTopCorner ' : '';
+
+    String titleStr = title != null ? ' $title' : '';
     buffer.add(
       pen.fg(
-        '$topLeftTitleCorner$emoji$typyLabel $title',
+        '$topLeftTitleCorner$emoji$logTypeLabel$titleStr',
       ),
     );
     addMiddleBorder(LogPart.title);
@@ -106,10 +109,13 @@ class LogFormatter {
       addMiddleBorder(LogPart.time);
     }
 
-    for (var line in message.split('\n')) {
-      buffer.add(pen.fg('$verticalLineAtLevel$line'));
+    if (message != null) {
+      for (var line in message.split('\n')) {
+        buffer.add(pen.fg('$verticalLineAtLevel$line'));
+      }
     }
-    if (settings.includeBox[type]!) buffer.add(pen.fg(_bottomBorder));
+
+    if (settings.includeBox[log]!) buffer.add(pen.fg(_bottomBorder));
 
     return buffer;
   }

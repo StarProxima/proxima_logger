@@ -26,18 +26,24 @@ class ProximaLogger {
   final LogOutput _output = ConsoleOutput();
 
   void log(
-    dynamic message, [
-    LogType type = Log.info,
+    LogType log, {
     String? title,
     dynamic error,
-    StackTrace? stackTrace,
-  ]) {
-    var logEvent = LogEvent(message, type, title, error, stackTrace);
+    StackTrace? stack,
+    dynamic message,
+  }) {
+    var logEvent = LogEvent(
+      log,
+      title: title,
+      error: error,
+      stack: stack,
+      message: message,
+    );
 
     var output = _printer.log(logEvent);
 
     if (output.isNotEmpty) {
-      OutputEvent outputEvent = OutputEvent(type, output);
+      OutputEvent outputEvent = OutputEvent(log, output);
       try {
         _output.output(outputEvent);
       } catch (e, s) {

@@ -53,7 +53,8 @@ class StackTraceFormatter {
 
   String? format(StackTrace? stackTrace, {required bool isError}) {
     var lines = stackTrace.toString().split('\n');
-    if (settings.stackTraceBeginIndex > 0 &&
+    if (!isError &&
+        settings.stackTraceBeginIndex > 0 &&
         settings.stackTraceBeginIndex < lines.length - 1) {
       lines = lines.sublist(settings.stackTraceBeginIndex);
     }

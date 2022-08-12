@@ -55,7 +55,7 @@ enum Log implements LogType {
       case Log.verbose:
         return AnsiPen(AnsiPen.grey(0.5));
       case Log.debug:
-        return AnsiPen.none();
+        return AnsiPen.green();
       case Log.info:
         return AnsiPen.white();
       case Log.warning:
