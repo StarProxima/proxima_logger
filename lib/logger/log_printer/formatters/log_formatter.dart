@@ -3,6 +3,13 @@
 import '../../support/ansi_pen.dart';
 import '../../support/log_type.dart';
 
+enum LogPart {
+  title,
+  error,
+  stackTrace,
+  time,
+}
+
 class LogFormatter {
   LogFormatter({
     this.lineLength = 120,
@@ -10,6 +17,7 @@ class LogFormatter {
     this.excludeBox = const {},
     this.printEmoji = true,
     required this.includeBox,
+    required this.middleBorders,
   }) {
     var doubleDividerLine = StringBuffer();
     var singleDividerLine = StringBuffer();
@@ -19,7 +27,7 @@ class LogFormatter {
     }
 
     _topBorder = '$topLeftCorner$doubleDividerLine';
-    _middleBorder = '$middleCorner$singleDividerLine';
+    _middleBorder = '$singleDividerLine';
     _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
   }
 
@@ -31,6 +39,8 @@ class LogFormatter {
   final Map<LogTypeInterface, bool> excludeBox;
 
   final Map<LogTypeInterface, bool> includeBox;
+
+  final Map<LogTypeInterface, Map<LogPart, bool>> middleBorders;
 
   String _topBorder = '';
   String _middleBorder = '';
@@ -44,36 +54,6 @@ class LogFormatter {
   static const doubleDivider = '─';
   static const singleDivider = '┄';
 
-  // static final levelColors = {
-  //   LogType.verbose: AnsiColor.fg(AnsiColor.grey(0.5)),
-  //   LogType.debug: AnsiColor.none(),
-  //   LogType.info: AnsiColor.fg(12),
-  //   LogType.warning: AnsiColor.fg(208),
-  //   LogType.error: AnsiColor.fg(196),
-  //   LogType.wtf: AnsiColor.fg(199),
-  // };
-
-  // static final levelEmojis = {
-  //   LogType.verbose: '',
-  //   LogType.debug: '🐛',
-  //   LogType.info: '💡',
-  //   LogType.warning: '⚠️',
-  //   LogType.error: '⛔',
-  //   LogType.wtf: '👾',
-  // };
-
-  // AnsiColor _getLevelColor(LogType level) {
-  //   if (colors) {
-  //     return levelColors[level]!;
-  //   } else {
-  //     return AnsiColor.none();
-  //   }
-  // }
-
-  // String _getEmoji(LogType level) {
-  //   return levelEmojis[level]!;
-  // }
-
   List<String> format(
     String message,
     LogTypeInterface type,
@@ -84,9 +64,9 @@ class LogFormatter {
   ) {
     List<String> buffer = [];
     var verticalLineAtLevel = (includeBox[type]!) ? ('$verticalLine ') : '';
+
     AnsiPen pen = type.ansiPen;
     AnsiPen penOnBg = type.ansiPenOnBackground;
-    // if (includeBox[level]!) buffer.add(color(_topBorder));
 
     String messageWithBg(String msg) {
       return pen.bg(
@@ -94,12 +74,22 @@ class LogFormatter {
       );
     }
 
+    void addMiddleBorder(LogPart part) {
+      if (middleBorders[type]![part]!) {
+        buffer.add(
+          pen.fg('${includeBox[type]! ? middleCorner : ''}$_middleBorder'),
+        );
+      }
+    }
+
+    String emoji = printEmoji ? type.emoji : '';
+    String typyLabel = '[${type.label.toUpperCase()}]';
     buffer.add(
       pen.fg(
-        '$topLeftCorner$middleTopCorner ${printEmoji ? type.emoji : ''}[${type.label.toUpperCase()}] ${title ?? ''}',
+        '${(includeBox[type]!) ? '$topLeftCorner$middleTopCorner ' : ''}$emoji$typyLabel $title',
       ),
     );
-    //if (includeBox[level]!) buffer.add(color(_middleBorder));
+    addMiddleBorder(LogPart.title);
 
     if (error != null) {
       for (var line in error.split('\n')) {
@@ -110,19 +100,19 @@ class LogFormatter {
               pen.resetBackground,
         );
       }
-      // if (includeBox[level]!) buffer.add(color(_middleBorder));
+      addMiddleBorder(LogPart.error);
     }
 
     if (stacktrace != null) {
       for (var line in stacktrace.split('\n')) {
         buffer.add(pen.fg('$verticalLineAtLevel$line'));
       }
-      //if (includeBox[level]!) buffer.add(color(_middleBorder));
+      addMiddleBorder(LogPart.stackTrace);
     }
 
     if (time != null) {
       buffer.add(pen.fg('$verticalLineAtLevel$time'));
-      //if (includeBox[level]!) buffer.add(color(_middleBorder));
+      addMiddleBorder(LogPart.time);
     }
 
     for (var line in message.split('\n')) {

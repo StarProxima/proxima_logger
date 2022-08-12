@@ -20,28 +20,46 @@ class PrettyPrinter extends LogPrinter {
     this.stackTraceBeginIndex = 2,
     this.methodCount = 2,
     this.errorMethodCount = 8,
-    this.printTime = true,
-    this.printEmojis = true,
+    this.printTime = false,
+    this.printEmoji = true,
+    this.includeBox,
+    this.middleBorders,
   });
 
   static final DateTime _startTime = DateTime.now();
 
-  late LogTimeFormatter logTimeFormatter = LogTimeFormatter(
+  LogTimeFormatter logTimeFormatter = LogTimeFormatter(
     _startTime,
   );
 
-  late StackTraceFormatter stackTraceFormatter = const StackTraceFormatter();
+  StackTraceFormatter stackTraceFormatter = const StackTraceFormatter();
+
+  late Map<LogTypeInterface, bool> defaultIncludeBox = {
+    for (var type in logTypes) type: true
+  };
+
+  late Map<LogTypeInterface, Map<LogPart, bool>> defaultMiddleBorders = {
+    for (var type in logTypes)
+      type: {
+        for (var part in LogPart.values) part: false,
+      },
+  };
 
   late LogFormatter logFormatter = LogFormatter(
-    includeBox: {for (var type in logTypes) type: true},
+    printEmoji: printEmoji,
+    includeBox: includeBox ?? defaultIncludeBox,
+    middleBorders: middleBorders ?? defaultMiddleBorders,
   );
 
   List<LogTypeInterface> logTypes;
   final int stackTraceBeginIndex;
   final int methodCount;
   final int errorMethodCount;
-  final bool printEmojis;
+  final bool printEmoji;
   final bool printTime;
+  final Map<LogTypeInterface, bool>? includeBox;
+
+  final Map<LogTypeInterface, Map<LogPart, bool>>? middleBorders;
 
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
@@ -88,7 +106,7 @@ class PrettyPrinter extends LogPrinter {
     return logFormatter.format(
       messageStr,
       event.type,
-      event.title,
+      event.title ?? '',
       timeStr,
       errorStr,
       stackTraceStr,
