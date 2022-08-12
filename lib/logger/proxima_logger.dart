@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'support/log_decorations.dart';
 import 'support/log_event.dart';
 
 import 'log_printer/log_printer.dart';
@@ -9,7 +10,9 @@ import 'support/log_output.dart';
 export 'support/log_type.dart';
 
 final logger = ProximaLogger(
-  settings: LogSettings(),
+  settings: LogSettings(
+    logDecorations: LogDecorations.rounded(120),
+  ),
   logTypeSettings: {
     Log.warning: LogSettings(
       leftBorder: true,

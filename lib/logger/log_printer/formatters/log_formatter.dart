@@ -2,6 +2,7 @@
 
 import '../../proxima_logger.dart';
 import '../../support/ansi_pen.dart';
+import '../../support/log_decorations.dart';
 import '../../support/log_settings.dart';
 
 class LogFormatter {
@@ -11,14 +12,6 @@ class LogFormatter {
 
   LogTypeSettings settings;
 
-  static const topLeftCorner = '┌';
-  static const bottomLeftCorner = '└';
-  static const middleCorner = '├';
-  static const middleTopCorner = '┤';
-  static const verticalLine = '│';
-  static const doubleDivider = '─';
-  static const singleDivider = '┄';
-
   List<String> format(
     LogType log, {
     String? title,
@@ -27,18 +20,22 @@ class LogFormatter {
     String? time,
     String? message,
   }) {
+    LogSettings st = settings[log];
+    LogDecorations ld = settings[log].logDecorations;
+
     List<String> buffer = [];
+
     String verticalLineAtLevel =
-        settings[log].leftBorder ? '$verticalLine ' : '';
+        settings[log].leftBorder ? '${ld.verticalLine} ' : '';
 
     String middleDivider =
-        '${settings[log].leftBorder ? middleCorner : ''}${settings[log].singleDividerLine}';
+        '${settings[log].leftBorder ? ld.middleCorner : ''}${ld.middleDividerLine}';
 
     AnsiPen pen = log.ansiPen;
     AnsiPen penOnBg = log.ansiPenOnBackground;
 
     String messageWithBg(String msg) {
-      if (settings[log].selectError) {
+      if (st.selectError) {
         return pen.bg(
           pen.isNotNone ? penOnBg.fg(msg) : msg,
         );
@@ -46,12 +43,11 @@ class LogFormatter {
       return pen.fg(msg);
     }
 
-    String emoji = settings[log].printEmoji ? log.emoji : '';
-    String logTypeLabel = settings[log].decorateLogTypeLabel
-        ? '[${log.label.toUpperCase()}]'
-        : log.label;
+    String emoji = st.printEmoji ? log.emoji : '';
+    String logTypeLabel =
+        st.decorateLogTypeLabel ? '[${log.label.toUpperCase()}]' : log.label;
     String topLeftTitleCorner =
-        settings[log].leftBorder ? '$topLeftCorner$middleTopCorner ' : '';
+        st.leftBorder ? '${ld.topLeftCorner}${ld.middleTopCorner} ' : '';
 
     String titleStr = title != null ? ' $title' : '';
     buffer.add(
@@ -61,7 +57,7 @@ class LogFormatter {
     );
 
     if (error != null) {
-      if (settings[log].dividerOverError) buffer.add(pen.fg(middleDivider));
+      if (st.dividerOverError) buffer.add(pen.fg(middleDivider));
       for (var line in error.split('\n')) {
         buffer.add(
           pen.fg(verticalLineAtLevel) +
@@ -73,14 +69,14 @@ class LogFormatter {
     }
 
     if (stacktrace != null) {
-      if (settings[log].dividerOverStack) buffer.add(pen.fg(middleDivider));
+      if (st.dividerOverStack) buffer.add(pen.fg(middleDivider));
       for (var line in stacktrace.split('\n')) {
         buffer.add(pen.fg('$verticalLineAtLevel$line'));
       }
     }
 
     if (time != null) {
-      if (settings[log].dividerOverTime) buffer.add(pen.fg(middleDivider));
+      if (st.dividerOverTime) buffer.add(pen.fg(middleDivider));
       buffer.add(pen.fg('$verticalLineAtLevel$time'));
     }
 
@@ -91,10 +87,10 @@ class LogFormatter {
       }
     }
 
-    if (settings[log].bottomBorder) {
+    if (st.bottomBorder) {
       buffer.add(
         pen.fg(
-          '${settings[log].leftBorder ? bottomLeftCorner : doubleDivider}${settings[log].doubleDividerLine}',
+          '${st.leftBorder ? ld.bottomLeftCorner : ld.divider}${ld.dividerLine}',
         ),
       );
     }
