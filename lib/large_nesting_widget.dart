@@ -12,7 +12,7 @@ class LargeNestingWidget extends StatelessWidget {
       return _fun1();
     } catch (e, s) {
       log(s.toString());
-      logger.log('message', LogType.wtf, '_NestingWidget1', e, s);
+      logger.log('message', Log.wtf, '_NestingWidget1', e, s);
       return const SizedBox();
     }
   }

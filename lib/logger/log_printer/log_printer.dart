@@ -15,51 +15,17 @@ abstract class LogPrinter {
 }
 
 class PrettyPrinter extends LogPrinter {
-  PrettyPrinter({
-    required this.logTypes,
-    this.stackTraceBeginIndex = 2,
-    this.methodCount = 2,
-    this.errorMethodCount = 8,
-    this.printTime = false,
-    this.printEmoji = true,
-    this.includeBox,
-    this.middleBorders,
-  });
-
-  static final DateTime _startTime = DateTime.now();
-
-  LogTimeFormatter logTimeFormatter = LogTimeFormatter(
-    _startTime,
+  PrettyPrinter(
+    this.settings,
   );
 
-  StackTraceFormatter stackTraceFormatter = const StackTraceFormatter();
+  LogSettings settings;
 
-  late Map<LogTypeInterface, bool> defaultIncludeBox = {
-    for (var type in logTypes) type: true
-  };
+  late StackTraceFormatter stackTraceFormatter = StackTraceFormatter(settings);
 
-  late Map<LogTypeInterface, Map<LogPart, bool>> defaultMiddleBorders = {
-    for (var type in logTypes)
-      type: {
-        for (var part in LogPart.values) part: false,
-      },
-  };
+  late LogTimeFormatter logTimeFormatter = LogTimeFormatter(settings);
 
-  late LogFormatter logFormatter = LogFormatter(
-    printEmoji: printEmoji,
-    includeBox: includeBox ?? defaultIncludeBox,
-    middleBorders: middleBorders ?? defaultMiddleBorders,
-  );
-
-  List<LogTypeInterface> logTypes;
-  final int stackTraceBeginIndex;
-  final int methodCount;
-  final int errorMethodCount;
-  final bool printEmoji;
-  final bool printTime;
-  final Map<LogTypeInterface, bool>? includeBox;
-
-  final Map<LogTypeInterface, Map<LogPart, bool>>? middleBorders;
+  late LogFormatter logFormatter = LogFormatter(settings);
 
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
@@ -82,22 +48,21 @@ class PrettyPrinter extends LogPrinter {
 
     String? stackTraceStr;
     if (event.stackTrace == null) {
-      if (methodCount > 0) {
+      if (settings.stackTraceMethodCount > 0) {
         stackTraceStr = stackTraceFormatter.format(
           StackTrace.current,
-          methodCount,
-          stackTraceBeginIndex,
+          isError: false,
         );
       }
-    } else if (errorMethodCount > 0) {
+    } else if (settings.errorStackTraceMethodCount > 0) {
       stackTraceStr = stackTraceFormatter.format(
         event.stackTrace,
-        errorMethodCount,
+        isError: true,
       );
     }
 
     String? timeStr;
-    if (printTime) {
+    if (settings.printTime) {
       timeStr = logTimeFormatter.getLogTime();
     }
 

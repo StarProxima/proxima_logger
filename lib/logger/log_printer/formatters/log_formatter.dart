@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
+import '../../proxima_logger.dart';
 import '../../support/ansi_pen.dart';
-import '../../support/log_type.dart';
 
 enum LogPart {
   title,
@@ -11,17 +11,12 @@ enum LogPart {
 }
 
 class LogFormatter {
-  LogFormatter({
-    this.lineLength = 120,
-    this.colors = true,
-    this.excludeBox = const {},
-    this.printEmoji = true,
-    required this.includeBox,
-    required this.middleBorders,
-  }) {
+  LogFormatter(
+    this.settings,
+  ) {
     var doubleDividerLine = StringBuffer();
     var singleDividerLine = StringBuffer();
-    for (var i = 0; i < lineLength - 1; i++) {
+    for (var i = 0; i < settings.lineLength - 1; i++) {
       doubleDividerLine.write(doubleDivider);
       singleDividerLine.write(singleDivider);
     }
@@ -31,16 +26,7 @@ class LogFormatter {
     _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
   }
 
-  final int lineLength;
-  final bool colors;
-
-  final bool printEmoji;
-
-  final Map<LogTypeInterface, bool> excludeBox;
-
-  final Map<LogTypeInterface, bool> includeBox;
-
-  final Map<LogTypeInterface, Map<LogPart, bool>> middleBorders;
+  LogSettings settings;
 
   String _topBorder = '';
   String _middleBorder = '';
@@ -56,14 +42,15 @@ class LogFormatter {
 
   List<String> format(
     String message,
-    LogTypeInterface type,
+    LogType type,
     String? title,
     String? time,
     String? error,
     String? stacktrace,
   ) {
     List<String> buffer = [];
-    var verticalLineAtLevel = (includeBox[type]!) ? ('$verticalLine ') : '';
+    var verticalLineAtLevel =
+        (settings.includeBox[type]!) ? ('$verticalLine ') : '';
 
     AnsiPen pen = type.ansiPen;
     AnsiPen penOnBg = type.ansiPenOnBackground;
@@ -75,18 +62,22 @@ class LogFormatter {
     }
 
     void addMiddleBorder(LogPart part) {
-      if (middleBorders[type]![part]!) {
+      if (settings.middleBorders[type]![part]!) {
         buffer.add(
-          pen.fg('${includeBox[type]! ? middleCorner : ''}$_middleBorder'),
+          pen.fg(
+            '${settings.includeBox[type]! ? middleCorner : ''}$_middleBorder',
+          ),
         );
       }
     }
 
-    String emoji = printEmoji ? type.emoji : '';
+    String emoji = settings.printEmoji ? type.emoji : '';
     String typyLabel = '[${type.label.toUpperCase()}]';
+    String topLeftTitleCorner =
+        (settings.includeBox[type]!) ? '$topLeftCorner$middleTopCorner ' : '';
     buffer.add(
       pen.fg(
-        '${(includeBox[type]!) ? '$topLeftCorner$middleTopCorner ' : ''}$emoji$typyLabel $title',
+        '$topLeftTitleCorner$emoji$typyLabel $title',
       ),
     );
     addMiddleBorder(LogPart.title);
@@ -118,7 +109,7 @@ class LogFormatter {
     for (var line in message.split('\n')) {
       buffer.add(pen.fg('$verticalLineAtLevel$line'));
     }
-    if (includeBox[type]!) buffer.add(pen.fg(_bottomBorder));
+    if (settings.includeBox[type]!) buffer.add(pen.fg(_bottomBorder));
 
     return buffer;
   }

@@ -9,11 +9,11 @@ class ErrorHandler {
   }
 
   static void recordError(Object error, StackTrace stackTrace) {
-    logger.log(error, LogType.error, null, error, stackTrace);
+    logger.log(error, Log.error, null, error, stackTrace);
   }
 
   static void _recordFlutterError(FlutterErrorDetails error) {
-    logger.log(error, LogType.error, null, error.exception, error.stack);
+    logger.log(error, Log.error, null, error.exception, error.stack);
   }
 
   const ErrorHandler._();

@@ -1,6 +1,6 @@
 import 'ansi_pen.dart';
 
-enum LogType implements LogTypeInterface {
+enum Log implements LogType {
   verbose,
   debug,
   info,
@@ -12,17 +12,17 @@ enum LogType implements LogTypeInterface {
   @override
   String get label {
     switch (this) {
-      case LogType.verbose:
+      case Log.verbose:
         return 'verbose';
-      case LogType.debug:
+      case Log.debug:
         return 'debug';
-      case LogType.info:
+      case Log.info:
         return 'info';
-      case LogType.warning:
+      case Log.warning:
         return 'warning';
-      case LogType.error:
+      case Log.error:
         return 'error';
-      case LogType.wtf:
+      case Log.wtf:
         return 'wtf';
       default:
         return '';
@@ -32,17 +32,17 @@ enum LogType implements LogTypeInterface {
   @override
   String get emoji {
     switch (this) {
-      case LogType.verbose:
+      case Log.verbose:
         return '';
-      case LogType.debug:
+      case Log.debug:
         return '🐛';
-      case LogType.info:
+      case Log.info:
         return '💡';
-      case LogType.warning:
+      case Log.warning:
         return '⚠️';
-      case LogType.error:
+      case Log.error:
         return '⛔';
-      case LogType.wtf:
+      case Log.wtf:
         return '👾';
       default:
         return '';
@@ -52,17 +52,17 @@ enum LogType implements LogTypeInterface {
   @override
   AnsiPen get ansiPen {
     switch (this) {
-      case LogType.verbose:
+      case Log.verbose:
         return AnsiPen(AnsiPen.grey(0.5));
-      case LogType.debug:
+      case Log.debug:
         return AnsiPen.none();
-      case LogType.info:
+      case Log.info:
         return AnsiPen.white();
-      case LogType.warning:
+      case Log.warning:
         return AnsiPen.orange();
-      case LogType.error:
+      case Log.error:
         return AnsiPen.red();
-      case LogType.wtf:
+      case Log.wtf:
         return AnsiPen.purple();
       default:
         return AnsiPen.none();
@@ -75,7 +75,7 @@ enum LogType implements LogTypeInterface {
   }
 }
 
-abstract class LogTypeInterface {
+abstract class LogType {
   String get label;
   String get emoji;
   AnsiPen get ansiPen;

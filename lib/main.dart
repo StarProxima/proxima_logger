@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   'info',
-                  LogType.info,
+                  Log.info,
                   'Title',
                   Exception('Error'),
                 );
@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   'debug',
-                  LogType.debug,
+                  Log.debug,
                   'Title',
                   Exception('Error'),
                 );
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   'warning',
-                  LogType.warning,
+                  Log.warning,
                   'Title',
                   Exception('Error'),
                 );
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 } catch (e, s) {
                   logger.log(
                     'error',
-                    LogType.error,
+                    Log.error,
                     'Title',
                     e,
                     s,
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   'wtf',
-                  LogType.wtf,
+                  Log.wtf,
                   'Title',
                   Exception('Error'),
                 );
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   Task.random().toMap(),
-                  LogType.info,
+                  Log.info,
                   'Title',
                 );
               },

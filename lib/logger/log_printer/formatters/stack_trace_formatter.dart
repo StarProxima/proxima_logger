@@ -1,5 +1,9 @@
+import '../../proxima_logger.dart';
+
 class StackTraceFormatter {
-  const StackTraceFormatter();
+  const StackTraceFormatter(this.settings);
+
+  final LogSettings settings;
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   /// For example:
@@ -47,14 +51,11 @@ class StackTraceFormatter {
         match.group(1)!.startsWith('dart:');
   }
 
-  String? format(
-    StackTrace? stackTrace,
-    int methodCount, [
-    int beginIndex = 0,
-  ]) {
+  String? format(StackTrace? stackTrace, {required bool isError}) {
     var lines = stackTrace.toString().split('\n');
-    if (beginIndex > 0 && beginIndex < lines.length - 1) {
-      lines = lines.sublist(beginIndex);
+    if (settings.stackTraceBeginIndex > 0 &&
+        settings.stackTraceBeginIndex < lines.length - 1) {
+      lines = lines.sublist(settings.stackTraceBeginIndex);
     }
     var formatted = <String>[];
     var count = 0;
@@ -66,8 +67,14 @@ class StackTraceFormatter {
         continue;
       }
       formatted.add('#$count   ${line.replaceFirst(RegExp(r'#\d+\s+'), '')}');
-      if (++count == methodCount) {
-        break;
+      if (isError) {
+        if (++count >= settings.errorStackTraceMethodCount) {
+          break;
+        }
+      } else {
+        if (++count >= settings.stackTraceMethodCount) {
+          break;
+        }
       }
     }
 
