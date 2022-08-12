@@ -1,9 +1,9 @@
-import '../../proxima_logger.dart';
+import '../../support/log_type.dart';
 
 class LogTimeFormatter {
-  const LogTimeFormatter(this.settings);
+  LogTimeFormatter(this.startAppTime);
 
-  final LogSettings settings;
+  final DateTime startAppTime;
 
   static String _fourDigits(int n) {
     if (n >= 1000) return "$n";
@@ -23,7 +23,7 @@ class LogTimeFormatter {
     return '0$n';
   }
 
-  String getLogTime() {
+  String getLogTime(LogType log) {
     DateTime now = DateTime.now();
 
     String y = _fourDigits(now.year);
@@ -34,7 +34,7 @@ class LogTimeFormatter {
     String sec = _twoDigits(now.second);
     String ms = _threeDigits(now.millisecond);
 
-    var timeSinceStart = now.difference(settings.startAppTime).toString();
+    var timeSinceStart = now.difference(startAppTime).toString();
     return '$h:$min:$sec.$ms (+$timeSinceStart) $d.$m.$y';
   }
 }

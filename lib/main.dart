@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
                   Log.info,
                   title:
                       'Крик души не покинет стены Цитадели. Перед смертью вопрос: что же я наделал? На коленях стою и разбита Скорбь. ',
+                  error: Exception('wepijfowief'),
                 );
               },
               child: const Text('info'),

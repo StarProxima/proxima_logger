@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import '../proxima_logger.dart';
 import '../support/log_event.dart';
+import '../support/log_settings.dart';
 import 'formatters/log_formatter.dart';
 import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
@@ -19,13 +19,12 @@ class PrettyPrinter extends LogPrinter {
     this.settings,
   );
 
-  LogSettings settings;
+  LogTypeSettings settings;
 
   late StackTraceFormatter stackTraceFormatter = StackTraceFormatter(settings);
-
-  late LogTimeFormatter logTimeFormatter = LogTimeFormatter(settings);
-
   late LogFormatter logFormatter = LogFormatter(settings);
+
+  late LogTimeFormatter logTimeFormatter = LogTimeFormatter(DateTime.now());
 
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
@@ -49,14 +48,16 @@ class PrettyPrinter extends LogPrinter {
     String? stackTraceStr;
 
     if (event.stack == null) {
-      if (settings.stackTraceMethodCount > 0) {
+      if (settings[event.log].stackTraceMethodCount > 0) {
         stackTraceStr = stackTraceFormatter.format(
+          event.log,
           StackTrace.current,
           isError: false,
         );
       }
-    } else if (settings.errorStackTraceMethodCount > 0) {
+    } else if (settings[event.log].errorStackTraceMethodCount > 0) {
       stackTraceStr = stackTraceFormatter.format(
+        event.log,
         event.stack,
         isError: true,
       );
@@ -64,8 +65,8 @@ class PrettyPrinter extends LogPrinter {
 
     String? timeStr;
 
-    if (settings.printTime) {
-      timeStr = logTimeFormatter.getLogTime();
+    if (settings[event.log].printTime) {
+      timeStr = logTimeFormatter.getLogTime(event.log);
     }
 
     String? messageStr;

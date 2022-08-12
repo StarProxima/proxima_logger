@@ -1,9 +1,8 @@
 import 'ansi_pen.dart';
 
 enum Log implements LogType {
-  verbose,
-  debug,
   info,
+  debug,
   warning,
   error,
   wtf,
@@ -12,12 +11,10 @@ enum Log implements LogType {
   @override
   String get label {
     switch (this) {
-      case Log.verbose:
-        return 'verbose';
-      case Log.debug:
-        return 'debug';
       case Log.info:
         return 'info';
+      case Log.debug:
+        return 'debug';
       case Log.warning:
         return 'warning';
       case Log.error:
@@ -32,12 +29,10 @@ enum Log implements LogType {
   @override
   String get emoji {
     switch (this) {
-      case Log.verbose:
-        return '';
-      case Log.debug:
-        return '🐛';
       case Log.info:
         return '💡';
+      case Log.debug:
+        return '🐛';
       case Log.warning:
         return '⚠️';
       case Log.error:
@@ -52,12 +47,10 @@ enum Log implements LogType {
   @override
   AnsiPen get ansiPen {
     switch (this) {
-      case Log.verbose:
-        return AnsiPen(AnsiPen.grey(0.5));
+      case Log.info:
+        return AnsiPen.none();
       case Log.debug:
         return AnsiPen.green();
-      case Log.info:
-        return AnsiPen.white();
       case Log.warning:
         return AnsiPen.orange();
       case Log.error:

@@ -2,35 +2,14 @@
 
 import '../../proxima_logger.dart';
 import '../../support/ansi_pen.dart';
-
-enum LogPart {
-  title,
-  error,
-  stackTrace,
-  time,
-}
+import '../../support/log_settings.dart';
 
 class LogFormatter {
   LogFormatter(
     this.settings,
-  ) {
-    var doubleDividerLine = StringBuffer();
-    var singleDividerLine = StringBuffer();
-    for (var i = 0; i < settings.lineLength - 1; i++) {
-      doubleDividerLine.write(doubleDivider);
-      singleDividerLine.write(singleDivider);
-    }
+  );
 
-    _topBorder = '$topLeftCorner$doubleDividerLine';
-    _middleBorder = '$singleDividerLine';
-    _bottomBorder = '$bottomLeftCorner$doubleDividerLine';
-  }
-
-  LogSettings settings;
-
-  String _topBorder = '';
-  String _middleBorder = '';
-  String _bottomBorder = '';
+  LogTypeSettings settings;
 
   static const topLeftCorner = '┌';
   static const bottomLeftCorner = '└';
@@ -49,33 +28,30 @@ class LogFormatter {
     String? message,
   }) {
     List<String> buffer = [];
-    var verticalLineAtLevel =
-        (settings.includeBox[log]!) ? ('$verticalLine ') : '';
+    String verticalLineAtLevel =
+        settings[log].leftBorder ? '$verticalLine ' : '';
+
+    String middleDivider =
+        '${settings[log].leftBorder ? middleCorner : ''}${settings[log].singleDividerLine}';
 
     AnsiPen pen = log.ansiPen;
     AnsiPen penOnBg = log.ansiPenOnBackground;
 
     String messageWithBg(String msg) {
-      return pen.fg(msg);
-      return pen.bg(
-        pen.isNotNone ? penOnBg.fg(msg) : msg,
-      );
-    }
-
-    void addMiddleBorder(LogPart part) {
-      if (settings.middleBorders[log]![part]!) {
-        buffer.add(
-          pen.fg(
-            '${settings.includeBox[log]! ? middleCorner : ''}$_middleBorder',
-          ),
+      if (settings[log].selectError) {
+        return pen.bg(
+          pen.isNotNone ? penOnBg.fg(msg) : msg,
         );
       }
+      return pen.fg(msg);
     }
 
-    String emoji = settings.printEmoji ? log.emoji : '';
-    String logTypeLabel = '[${log.label.toUpperCase()}]';
+    String emoji = settings[log].printEmoji ? log.emoji : '';
+    String logTypeLabel = settings[log].decorateLogTypeLabel
+        ? '[${log.label.toUpperCase()}]'
+        : log.label;
     String topLeftTitleCorner =
-        (settings.includeBox[log]!) ? '$topLeftCorner$middleTopCorner ' : '';
+        settings[log].leftBorder ? '$topLeftCorner$middleTopCorner ' : '';
 
     String titleStr = title != null ? ' $title' : '';
     buffer.add(
@@ -83,9 +59,9 @@ class LogFormatter {
         '$topLeftTitleCorner$emoji$logTypeLabel$titleStr',
       ),
     );
-    addMiddleBorder(LogPart.title);
 
     if (error != null) {
+      if (settings[log].dividerOverError) buffer.add(pen.fg(middleDivider));
       for (var line in error.split('\n')) {
         buffer.add(
           pen.fg(verticalLineAtLevel) +
@@ -94,28 +70,34 @@ class LogFormatter {
               pen.resetBackground,
         );
       }
-      addMiddleBorder(LogPart.error);
     }
 
     if (stacktrace != null) {
+      if (settings[log].dividerOverStack) buffer.add(pen.fg(middleDivider));
       for (var line in stacktrace.split('\n')) {
         buffer.add(pen.fg('$verticalLineAtLevel$line'));
       }
-      addMiddleBorder(LogPart.stackTrace);
     }
 
     if (time != null) {
+      if (settings[log].dividerOverTime) buffer.add(pen.fg(middleDivider));
       buffer.add(pen.fg('$verticalLineAtLevel$time'));
-      addMiddleBorder(LogPart.time);
     }
 
     if (message != null) {
+      if (settings[log].dividerOverMessage) buffer.add(pen.fg(middleDivider));
       for (var line in message.split('\n')) {
         buffer.add(pen.fg('$verticalLineAtLevel$line'));
       }
     }
 
-    if (settings.includeBox[log]!) buffer.add(pen.fg(_bottomBorder));
+    if (settings[log].bottomBorder) {
+      buffer.add(
+        pen.fg(
+          '${settings[log].leftBorder ? bottomLeftCorner : doubleDivider}${settings[log].doubleDividerLine}',
+        ),
+      );
+    }
 
     return buffer;
   }
