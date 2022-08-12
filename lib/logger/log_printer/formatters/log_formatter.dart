@@ -20,16 +20,10 @@ class LogFormatter {
     String? time,
     String? message,
   }) {
-    LogSettings st = settings[log];
-    LogDecorations ld = settings[log].logDecorations;
-
     List<String> buffer = [];
 
-    String verticalLineAtLevel =
-        settings[log].leftBorder ? '${ld.verticalLine} ' : '';
-
-    String middleDivider =
-        '${settings[log].leftBorder ? ld.middleCorner : ''}${ld.middleDividerLine}';
+    LogSettings st = settings[log];
+    LogDecorations ld = settings[log].logDecorations;
 
     AnsiPen pen = log.ansiPen;
     AnsiPen penOnBg = log.ansiPenOnBackground;
@@ -43,13 +37,28 @@ class LogFormatter {
       return pen.fg(msg);
     }
 
-    String emoji = st.printEmoji ? log.emoji : '';
-    String logTypeLabel =
-        st.decorateLogTypeLabel ? '[${log.label.toUpperCase()}]' : log.label;
+    String verticalLineAtLevel = st.leftBorder ? '${ld.verticalLine} ' : '';
+
+    String middleDivider =
+        '${st.leftBorder ? ld.middleCorner : ''}${ld.middleDividerLine}';
+
     String topLeftTitleCorner =
         st.leftBorder ? '${ld.topLeftCorner}${ld.middleTopCorner} ' : '';
 
-    String titleStr = title != null ? ' $title' : '';
+    String emoji = st.printEmoji ? log.emoji : '';
+
+    String logTypeLabel = st.printLogTypeLabel
+        ? st.decorateLogTypeLabel
+            ? '[${log.label.toUpperCase()}]'
+            : log.label
+        : '';
+
+    String titleStr = st.printTitle
+        ? title != null
+            ? ' $title'
+            : ''
+        : '';
+
     buffer.add(
       pen.fg(
         '$topLeftTitleCorner$emoji$logTypeLabel$titleStr',

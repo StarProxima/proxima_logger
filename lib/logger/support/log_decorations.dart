@@ -9,7 +9,7 @@ class LogDecorations {
     this.divider = '─',
     this.middleDivider = '┄',
   }) {
-    _initLogDecorate();
+    _init();
   }
 
   LogDecorations.thick(this.lineLength)
@@ -20,7 +20,7 @@ class LogDecorations {
         verticalLine = '║',
         divider = '═',
         middleDivider = '╌' {
-    _initLogDecorate();
+    _init();
   }
 
   LogDecorations.rounded(this.lineLength)
@@ -31,10 +31,10 @@ class LogDecorations {
         verticalLine = '│',
         divider = '─',
         middleDivider = '┄' {
-    _initLogDecorate();
+    _init();
   }
 
-  void _initLogDecorate() {
+  void _init() {
     var doubleDividerLine = StringBuffer();
     var singleDividerLine = StringBuffer();
     for (var i = 0; i < lineLength - 1; i++) {

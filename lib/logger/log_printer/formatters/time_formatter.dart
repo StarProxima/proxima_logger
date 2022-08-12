@@ -1,8 +1,10 @@
+import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
 class LogTimeFormatter {
-  LogTimeFormatter(this.startAppTime);
+  LogTimeFormatter(this.settings, {required this.startAppTime});
 
+  LogTypeSettings settings;
   final DateTime startAppTime;
 
   static String _fourDigits(int n) {
@@ -26,15 +28,24 @@ class LogTimeFormatter {
   String getLogTime(LogType log) {
     DateTime now = DateTime.now();
 
-    String y = _fourDigits(now.year);
-    String m = _twoDigits(now.month);
-    String d = _twoDigits(now.day);
+    String date = '';
+    if (settings[log].printDateInTime) {
+      String y = _fourDigits(now.year);
+      String m = _twoDigits(now.month);
+      String d = _twoDigits(now.day);
+      date = '$d.$m.$y';
+    }
+
     String h = _twoDigits(now.hour);
     String min = _twoDigits(now.minute);
     String sec = _twoDigits(now.second);
     String ms = _threeDigits(now.millisecond);
 
-    var timeSinceStart = now.difference(startAppTime).toString();
-    return '$h:$min:$sec.$ms (+$timeSinceStart) $d.$m.$y';
+    String timeSinceStart = '';
+    if (settings[log].printTimeSinceStartInTime) {
+      timeSinceStart = '(+${now.difference(startAppTime).toString()})';
+    }
+
+    return '$h:$min:$sec.$ms $timeSinceStart $date';
   }
 }
