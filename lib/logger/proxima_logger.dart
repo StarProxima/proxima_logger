@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_print
 
+import 'log_decorator/log_decorator.dart';
+import 'log_formatter/log_formatter.dart';
 import 'support/log_decorations.dart';
 import 'support/log_event.dart';
 
-import 'log_printer/log_printer.dart';
+import 'support/formatted_log_event.dart';
 import 'support/log_settings.dart';
 import 'support/log_type.dart';
 import 'support/log_output.dart';
@@ -11,32 +13,45 @@ export 'support/log_type.dart';
 
 final logger = ProximaLogger(
   settings: LogSettings(
-    logDecorations: LogDecorations.rounded(120),
+    logParts: [
+      LogPart.divider,
+      LogPart.stack,
+      LogPart.error,
+      LogPart.time,
+      LogPart.divider,
+      LogPart.message,
+    ],
+    logDecorations: LogDecorations.thick(120),
   ),
-  logTypeSettings: {
+  typeSettings: {
     Log.warning: LogSettings(
       leftBorder: true,
       bottomBorder: true,
       printEmoji: false,
       selectError: false,
-      dividerOverError: true,
-      dividerOverMessage: true,
-      dividerOverStack: true,
-      dividerOverTime: true,
     ),
   },
 );
 
 class ProximaLogger {
-  ProximaLogger({required this.settings, this.logTypeSettings});
+  ProximaLogger({
+    LogSettings? settings,
+    Map<LogType, LogSettings>? typeSettings,
+  }) {
+    this.settings = settings ?? LogSettings();
+    this.typeSettings = typeSettings ?? {};
+  }
 
-  LogSettings settings;
+  late LogSettings settings;
 
-  Map<LogType, LogSettings>? logTypeSettings;
+  late Map<LogType, LogSettings> typeSettings;
 
-  late final LogPrinter _printer = PrettyPrinter(
-    LogTypeSettings(settings, logTypeSettings ?? {}),
-  );
+  late final LogTypeSettings logTypeSettings =
+      LogTypeSettings(settings, typeSettings);
+
+  late final Formatter _printer = LogFormatter(logTypeSettings);
+
+  late final LogDecorator _decorator = LogDecorator(logTypeSettings);
 
   final LogOutput _output = ConsoleOutput();
 
@@ -55,7 +70,9 @@ class ProximaLogger {
       message: message,
     );
 
-    var output = _printer.log(logEvent);
+    FormattedLogEvent formattedLogEvent = _printer.log(logEvent);
+
+    List<String> output = _decorator.format(formattedLogEvent);
 
     if (output.isNotEmpty) {
       OutputEvent outputEvent = OutputEvent(log, output);

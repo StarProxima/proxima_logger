@@ -106,6 +106,7 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   Log.wtf,
                   title: 'Task json',
+                  error: Exception('WWWWTTTTFFFF EXPEXTION'),
                   message: Task.random().toMap(),
                 );
               },

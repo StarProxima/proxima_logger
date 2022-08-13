@@ -1,28 +1,27 @@
 import 'dart:convert';
 
 import '../support/log_event.dart';
+import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
-import 'formatters/log_formatter.dart';
 import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
 
-abstract class LogPrinter {
+abstract class Formatter {
   void init() {}
 
-  List<String> log(LogEvent event);
+  FormattedLogEvent log(LogEvent event);
 
   void destroy() {}
 }
 
-class PrettyPrinter extends LogPrinter {
-  PrettyPrinter(
+class LogFormatter extends Formatter {
+  LogFormatter(
     this.settings,
   );
 
   LogTypeSettings settings;
 
   late StackTraceFormatter stackTraceFormatter = StackTraceFormatter(settings);
-  late LogFormatter logFormatter = LogFormatter(settings);
 
   late LogTimeFormatter logTimeFormatter = LogTimeFormatter(
     settings,
@@ -45,13 +44,13 @@ class PrettyPrinter extends LogPrinter {
   }
 
   @override
-  List<String> log(LogEvent event) {
+  FormattedLogEvent log(LogEvent event) {
     LogSettings st = settings[event.log];
     String? errorStr = event.error?.toString();
 
     String? stackTraceStr;
 
-    if (st.printStack) {
+    if (st.logParts.contains(LogPart.stack)) {
       if (event.stack == null) {
         if (settings[event.log].stackTraceMethodCount > 0) {
           stackTraceStr = stackTraceFormatter.format(
@@ -70,23 +69,25 @@ class PrettyPrinter extends LogPrinter {
     }
     String? timeStr;
 
-    if (st.printTime) {
+    if (st.logParts.contains(LogPart.time)) {
       timeStr = logTimeFormatter.getLogTime(event.log);
     }
 
     String? messageStr;
 
-    if (st.printMessage && event.message != null) {
+    if (st.logParts.contains(LogPart.message) && event.message != null) {
       messageStr = stringifyMessage(event.message);
     }
 
-    return logFormatter.format(
+    FormattedLogEvent printLogEvent = FormattedLogEvent(
       event.log,
       title: event.title,
       error: errorStr,
-      stacktrace: stackTraceStr,
+      stack: stackTraceStr,
       time: timeStr,
       message: messageStr,
     );
+
+    return printLogEvent;
   }
 }
