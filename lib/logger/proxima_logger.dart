@@ -14,7 +14,6 @@ export 'support/log_type.dart';
 final logger = ProximaLogger(
   settings: LogSettings(
     logParts: [
-      LogPart.divider,
       LogPart.stack,
       LogPart.error,
       LogPart.time,
@@ -49,7 +48,7 @@ class ProximaLogger {
   late final LogTypeSettings logTypeSettings =
       LogTypeSettings(settings, typeSettings);
 
-  late final Formatter _printer = LogFormatter(logTypeSettings);
+  late final Formatter _formatter = LogFormatter(logTypeSettings);
 
   late final LogDecorator _decorator = LogDecorator(logTypeSettings);
 
@@ -70,7 +69,7 @@ class ProximaLogger {
       message: message,
     );
 
-    FormattedLogEvent formattedLogEvent = _printer.log(logEvent);
+    FormattedLogEvent formattedLogEvent = _formatter.format(logEvent);
 
     List<String> output = _decorator.format(formattedLogEvent);
 

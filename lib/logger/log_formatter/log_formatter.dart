@@ -1,15 +1,15 @@
-import 'dart:convert';
-
 import '../support/log_event.dart';
 import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
+import 'formatters/queue_formatter.dart';
+import 'formatters/message_formatter.dart';
 import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
 
 abstract class Formatter {
   void init() {}
 
-  FormattedLogEvent log(LogEvent event);
+  FormattedLogEvent format(LogEvent event);
 
   void destroy() {}
 }
@@ -21,73 +21,70 @@ class LogFormatter extends Formatter {
 
   LogTypeSettings settings;
 
-  late StackTraceFormatter stackTraceFormatter = StackTraceFormatter(settings);
+  QueueFormatter queueFormatter = QueueFormatter();
 
-  late LogTimeFormatter logTimeFormatter = LogTimeFormatter(
+  MessageFormatter messageFormatter = MessageFormatter();
+
+  late StackTraceFormatter stackFormatter = StackTraceFormatter(settings);
+
+  late LogTimeFormatter timeFormatter = LogTimeFormatter(
     settings,
     startAppTime: DateTime.now(),
   );
 
-  // Handles any object that is causing JsonEncoder() problems
-  Object toEncodableFallback(dynamic object) {
-    return object.toString();
-  }
-
-  String stringifyMessage(dynamic message) {
-    final finalMessage = message is Function ? message() : message;
-    if (finalMessage is Map || finalMessage is Iterable) {
-      var encoder = JsonEncoder.withIndent('  ', toEncodableFallback);
-      return encoder.convert(finalMessage);
-    } else {
-      return finalMessage.toString();
-    }
-  }
-
   @override
-  FormattedLogEvent log(LogEvent event) {
-    LogSettings st = settings[event.log];
-    String? errorStr = event.error?.toString();
+  FormattedLogEvent format(LogEvent event) {
+    List<LogPart> queue =
+        queueFormatter.format(event, settings[event.log].logParts);
 
-    String? stackTraceStr;
+    String? error;
 
-    if (st.logParts.contains(LogPart.stack)) {
+    if (queue.contains(LogPart.error)) {
+      error = event.error?.toString();
+    }
+
+    String? stack;
+
+    if (queue.contains(LogPart.stack)) {
       if (event.stack == null) {
         if (settings[event.log].stackTraceMethodCount > 0) {
-          stackTraceStr = stackTraceFormatter.format(
+          stack = stackFormatter.format(
             event.log,
             StackTrace.current,
             isError: false,
           );
         }
       } else if (settings[event.log].errorStackTraceMethodCount > 0) {
-        stackTraceStr = stackTraceFormatter.format(
+        stack = stackFormatter.format(
           event.log,
           event.stack,
           isError: true,
         );
       }
     }
-    String? timeStr;
 
-    if (st.logParts.contains(LogPart.time)) {
-      timeStr = logTimeFormatter.getLogTime(event.log);
+    String? time;
+
+    if (queue.contains(LogPart.time)) {
+      time = timeFormatter.getLogTime(event.log);
     }
 
-    String? messageStr;
+    String? message;
 
-    if (st.logParts.contains(LogPart.message) && event.message != null) {
-      messageStr = stringifyMessage(event.message);
+    if (queue.contains(LogPart.message) && event.message != null) {
+      message = messageFormatter.format(event.message);
     }
 
-    FormattedLogEvent printLogEvent = FormattedLogEvent(
-      event.log,
+    FormattedLogEvent formattedLogEvent = FormattedLogEvent(
+      log: event.log,
+      queue: queue,
       title: event.title,
-      error: errorStr,
-      stack: stackTraceStr,
-      time: timeStr,
-      message: messageStr,
+      error: error,
+      stack: stack,
+      time: time,
+      message: message,
     );
 
-    return printLogEvent;
+    return formattedLogEvent;
   }
 }

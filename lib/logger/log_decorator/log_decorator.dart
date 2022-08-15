@@ -12,42 +12,6 @@ class LogDecorator {
 
   LogTypeSettings settings;
 
-  List<LogPart> _formatQueue(FormattedLogEvent event, List<LogPart> list) {
-    List<LogPart> queue = [];
-
-    for (LogPart part in list) {
-      switch (part) {
-        case LogPart.error:
-          if (event.error == null) continue;
-          break;
-        case LogPart.stack:
-          if (event.stack == null) continue;
-          break;
-        case LogPart.time:
-          if (event.time == null) continue;
-          break;
-        case LogPart.message:
-          if (event.message == null) continue;
-          break;
-        default:
-      }
-
-      if (queue.isNotEmpty) {
-        if (queue.last != part) {
-          queue.add(part);
-        }
-      } else {
-        queue.add(part);
-      }
-    }
-
-    while (queue.isNotEmpty && queue.last == LogPart.divider) {
-      queue.removeLast();
-    }
-
-    return queue;
-  }
-
   String _getTitle(FormattedLogEvent event) {
     LogSettings st = settings[event.log];
     LogDecorations ld = settings[event.log].logDecorations;
@@ -77,8 +41,6 @@ class LogDecorator {
     LogDecorations ld = settings[event.log].logDecorations;
     AnsiPen pen = event.log.ansiPen;
 
-    List<LogPart> queue = _formatQueue(event, st.logParts);
-
     String? error = event.error;
     String? stack = event.stack;
     String? time = event.time;
@@ -93,7 +55,7 @@ class LogDecorator {
     String middleDivider =
         '${st.leftBorder ? ld.middleCorner : ''}${ld.middleDividerLine}';
 
-    for (LogPart part in queue) {
+    for (LogPart part in event.queue) {
       switch (part) {
         case LogPart.error:
           if (error != null) {
