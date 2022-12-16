@@ -1,50 +1,4 @@
 class LogDecorations {
-  LogDecorations(
-    this.lineLength, {
-    this.topLeftCorner = '┌',
-    this.bottomLeftCorner = '└',
-    this.middleCorner = '├',
-    this.middleTopCorner = '┤',
-    this.verticalLine = '│',
-    this.divider = '─',
-    this.middleDivider = '┄',
-  }) {
-    _init();
-  }
-
-  LogDecorations.thick(this.lineLength)
-      : topLeftCorner = '╔',
-        bottomLeftCorner = '╚',
-        middleCorner = '╠',
-        middleTopCorner = '╣',
-        verticalLine = '║',
-        divider = '═',
-        middleDivider = '╌' {
-    _init();
-  }
-
-  LogDecorations.rounded(this.lineLength)
-      : topLeftCorner = '╭',
-        bottomLeftCorner = '╰',
-        middleCorner = '├',
-        middleTopCorner = '┤',
-        verticalLine = '│',
-        divider = '─',
-        middleDivider = '┄' {
-    _init();
-  }
-
-  void _init() {
-    var doubleDividerLine = StringBuffer();
-    var singleDividerLine = StringBuffer();
-    for (var i = 0; i < lineLength - 1; i++) {
-      doubleDividerLine.write(divider);
-      singleDividerLine.write(middleDivider);
-    }
-    dividerLine = '$doubleDividerLine';
-    middleDividerLine = '$singleDividerLine';
-  }
-
   final int lineLength;
   final String topLeftCorner;
   final String bottomLeftCorner;
@@ -54,6 +8,50 @@ class LogDecorations {
   final String divider;
   final String middleDivider;
 
-  late final String dividerLine;
-  late final String middleDividerLine;
+  final String dividerLine;
+  final String middleDividerLine;
+
+  const LogDecorations.custom(
+    this.lineLength, {
+    required this.topLeftCorner,
+    required this.bottomLeftCorner,
+    required this.middleCorner,
+    required this.middleTopCorner,
+    required this.verticalLine,
+    required this.divider,
+    required this.middleDivider,
+  })  : dividerLine = divider * lineLength,
+        middleDividerLine = middleDivider * lineLength;
+
+  const LogDecorations.thin(this.lineLength)
+      : topLeftCorner = '┌',
+        bottomLeftCorner = '└',
+        middleCorner = '├',
+        middleTopCorner = '┤',
+        verticalLine = '│',
+        divider = '─',
+        middleDivider = '┄',
+        dividerLine = '─' * lineLength,
+        middleDividerLine = '┄' * lineLength;
+  const LogDecorations.thick(this.lineLength)
+      : topLeftCorner = '╔',
+        bottomLeftCorner = '╚',
+        middleCorner = '╠',
+        middleTopCorner = '╣',
+        verticalLine = '║',
+        divider = '═',
+        middleDivider = '╌',
+        dividerLine = '═' * lineLength,
+        middleDividerLine = '╌' * lineLength;
+
+  const LogDecorations.rounded(this.lineLength)
+      : topLeftCorner = '╭',
+        bottomLeftCorner = '╰',
+        middleCorner = '├',
+        middleTopCorner = '┤',
+        verticalLine = '│',
+        divider = '─',
+        middleDivider = '┄',
+        dividerLine = '─' * lineLength,
+        middleDividerLine = '┄' * lineLength;
 }

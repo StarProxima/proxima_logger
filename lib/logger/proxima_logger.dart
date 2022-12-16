@@ -20,14 +20,15 @@ final logger = ProximaLogger(
       LogPart.divider,
       LogPart.message,
     ],
-    logDecorations: LogDecorations.thick(120),
+    logDecorations: LogDecorations.thick(80),
   ),
   typeSettings: {
     Log.warning: LogSettings(
-      leftBorder: true,
+      leftBorder: false,
       bottomBorder: true,
       printEmoji: false,
       selectError: false,
+      logDecorations: LogDecorations.thick(80),
     ),
   },
 );

@@ -46,7 +46,7 @@ class LogSettings {
     this.leftBorder = true,
     this.bottomBorder = true,
   }) {
-    this.logDecorations = logDecorations ?? LogDecorations(lineLength);
+    this.logDecorations = logDecorations ?? LogDecorations.thin(lineLength);
   }
 
   late final LogDecorations logDecorations;
