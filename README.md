@@ -2,7 +2,7 @@
 
 ## Getting started
 
-1. Add plugin to the project:
+1. Add package to the project:
     ```yaml
     dependencies:
         proxima_logger: ^0.5.0
@@ -79,6 +79,7 @@
     ```
 
 ## Usage
+1. Use logger.log() anywhere in the program.
     ```dart
     logger.log(
         Log.info,
@@ -99,5 +100,30 @@
             error: e,
             stack: s,
         );
+    }
+    ```
+
+2. Or write your own wrapper over logger for convenience.
+    ```dart
+    final logger = MyLogger();
+
+    class MyLogger extends ProximaLogger {
+        MyLogger({super.settings, super.typeSettings});
+
+        void info(String message) {
+            log(Log.info, message: message);
+        }
+
+        void error(Error error, StackTrace stack, [String? message]) {
+            log(Log.error, error: error, stack: stack, message: message);
+        }
+
+        void response(Response response) {
+            log(
+                Log.response,
+                title: '| ${response.requestOptions.method} | ${response.statusCode} | ${response.requestOptions.path}',
+                message: response.data,
+            );
+        }
     }
     ```

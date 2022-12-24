@@ -1,6 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:proxima_logger/proxima_logger.dart';
 
-final logger = ProximaLogger(
+final logger = MyLogger(
   settings: LogSettings(
     logParts: [
       LogPart.stack,
@@ -23,6 +24,27 @@ final logger = ProximaLogger(
     ),
   },
 );
+
+class MyLogger extends ProximaLogger {
+  MyLogger({super.settings, super.typeSettings});
+
+  void info(String message) {
+    log(Log.info, message: message);
+  }
+
+  void error(Error error, StackTrace stack, [String? message]) {
+    log(Log.error, error: error, stack: stack, message: message);
+  }
+
+  void response(Response response) {
+    log(
+      Log.response,
+      title:
+          '| ${response.requestOptions.method} | ${response.statusCode} | ${response.requestOptions.path}',
+      message: response.data,
+    );
+  }
+}
 
 enum Log implements LogType {
   info,
