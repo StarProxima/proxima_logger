@@ -1,11 +1,26 @@
 import 'ansi_pen.dart';
 
+abstract class LogType {
+  LogType({
+    required this.label,
+    required this.emoji,
+    required this.ansiPen,
+    required this.ansiPenOnBackground,
+  });
+  final String label;
+  final String emoji;
+  final AnsiPen ansiPen;
+  final AnsiPen ansiPenOnBackground;
+}
+
 enum Log implements LogType {
   info,
   debug,
   warning,
   error,
   wtf,
+  request,
+  response,
   nothing;
 
   @override
@@ -21,6 +36,10 @@ enum Log implements LogType {
         return 'error';
       case Log.wtf:
         return 'wtf';
+      case Log.request:
+        return 'request';
+      case Log.response:
+        return 'response';
       default:
         return '';
     }
@@ -39,6 +58,10 @@ enum Log implements LogType {
         return '⛔';
       case Log.wtf:
         return '👾';
+      case Log.request:
+        return '📡';
+      case Log.response:
+        return '📡';
       default:
         return '';
     }
@@ -57,6 +80,10 @@ enum Log implements LogType {
         return AnsiPen.red();
       case Log.wtf:
         return AnsiPen.purple();
+      case Log.request:
+        return AnsiPen.blue();
+      case Log.response:
+        return AnsiPen.blue();
       default:
         return AnsiPen.none();
     }
@@ -66,11 +93,4 @@ enum Log implements LogType {
   AnsiPen get ansiPenOnBackground {
     return AnsiPen.black();
   }
-}
-
-abstract class LogType {
-  String get label;
-  String get emoji;
-  AnsiPen get ansiPen;
-  AnsiPen get ansiPenOnBackground;
 }

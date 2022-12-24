@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'error_handler.dart';
@@ -120,6 +121,33 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               child: const Text('exception'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                final response = await Dio(
+                  BaseOptions(
+                    baseUrl: 'https://realty.neirodev.ru/mehanik/',
+                    connectTimeout: 5000,
+                    receiveTimeout: 5000,
+                    sendTimeout: 5000,
+                    responseType: ResponseType.json,
+                  ),
+                ).get(
+                  '/partAnnouncements',
+                  queryParameters: {
+                    'pageNum': 0,
+                    'pageSize': 1,
+                  },
+                );
+                logger.log(
+                  Log.response,
+                  title:
+                      '| ${response.requestOptions.method} | ${response.statusCode} | ${response.requestOptions.path}',
+                  message: response.data,
+                );
+              },
+              child: const Text('request'),
             ),
             if (b) const LargeNestingWidget(),
           ],

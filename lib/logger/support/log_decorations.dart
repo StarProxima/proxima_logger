@@ -33,6 +33,7 @@ class LogDecorations {
         middleDivider = '┄',
         dividerLine = '─' * lineLength,
         middleDividerLine = '┄' * lineLength;
+
   const LogDecorations.thick(this.lineLength)
       : topLeftCorner = '╔',
         bottomLeftCorner = '╚',
