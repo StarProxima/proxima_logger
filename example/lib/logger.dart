@@ -1,6 +1,28 @@
 import 'package:proxima_logger/proxima_logger.dart';
 
-final logger = ProximaLogger();
+final logger = ProximaLogger(
+  settings: LogSettings(
+    logParts: [
+      LogPart.stack,
+      LogPart.error,
+      LogPart.time,
+      LogPart.divider,
+      LogPart.message,
+    ],
+    printEmoji: true,
+    printTitle: true,
+    printLogTypeLabel: true,
+  ),
+  typeSettings: {
+    Log.warning: LogSettings(
+      logParts: [
+        LogPart.stack,
+        LogPart.message,
+      ],
+      printEmoji: false,
+    ),
+  },
+);
 
 enum Log implements LogType {
   info,
