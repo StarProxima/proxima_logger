@@ -2,6 +2,7 @@
 import 'log_decorations.dart';
 import 'log_type.dart';
 
+/// Allows you to set the order in which parts of the log are displayed.
 enum LogPart {
   error,
   stack,
@@ -22,6 +23,7 @@ class LogTypeSettings {
   }
 }
 
+/// Settings for the logger.
 class LogSettings {
   LogSettings({
     this.logParts = const [
@@ -49,25 +51,48 @@ class LogSettings {
     this.logDecorations = logDecorations ?? LogDecorations.thin(lineLength);
   }
 
+  /// Wrapping style on output.
   late final LogDecorations logDecorations;
 
+  /// Allows you to set the order in which parts of the log are displayed.
   final List<LogPart> logParts;
 
+  /// Whether to print the emoji.
   final bool printEmoji;
+
+  /// Whether to print the log type label.
   final bool printLogTypeLabel;
+
+  /// Whether to print the title.
   final bool printTitle;
 
+  /// Whether to print the date in the time.
   final bool printDateInTime;
+
+  /// Whether to print the time since the start of the app in the time.
   final bool printTimeSinceStartInTime;
 
+  /// The number of methods to print in the stack trace.
   final int stackTraceBeginIndex;
+
+  /// The number of methods to print in the stack trace.
   final int stackTraceMethodCount;
+
+  /// The number of methods to print in the error stack trace.
   final int errorStackTraceMethodCount;
+
+  /// The length of the line.
   final int lineLength;
 
+  /// Whether to decorate the log type label.
   final bool decorateLogTypeLabel;
+
+  /// Whether to select the error.
   final bool selectError;
 
+  /// Whether to print the left border.
   final bool leftBorder;
+
+  /// Whether to print the bottom border.
   final bool bottomBorder;
 }

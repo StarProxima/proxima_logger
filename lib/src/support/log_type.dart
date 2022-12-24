@@ -1,5 +1,6 @@
 import 'ansi_pen.dart';
 
+/// LogType is an interface for log types.
 abstract class LogType {
   LogType({
     required this.label,
@@ -13,6 +14,7 @@ abstract class LogType {
   final AnsiPen ansiPenOnBackground;
 }
 
+/// Default implementation of LogType.
 enum Log implements LogType {
   info,
   debug,

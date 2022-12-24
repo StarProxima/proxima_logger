@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'log_decorator/log_decorator.dart';
 import 'log_formatter/log_formatter.dart';
 import 'support/log_event.dart';
@@ -10,6 +8,7 @@ import 'support/log_type.dart';
 import 'support/log_output.dart';
 export 'support/log_type.dart';
 
+/// Use instances of ProximaLogger to print log messages.
 class ProximaLogger {
   ProximaLogger({
     LogSettings? settings,
@@ -19,8 +18,10 @@ class ProximaLogger {
     this.typeSettings = typeSettings ?? {};
   }
 
+  /// The default settings for all log types.
   late LogSettings settings;
 
+  /// The settings for each log type.
   late Map<LogType, LogSettings> typeSettings;
 
   late final LogTypeSettings logTypeSettings =
@@ -32,6 +33,7 @@ class ProximaLogger {
 
   final LogOutput _output = ConsoleOutput();
 
+  /// Prints a log message.
   void log(
     LogType log, {
     String? title,
