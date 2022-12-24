@@ -127,3 +127,7 @@
         }
     }
     ```
+    
+## Output
+![image](https://user-images.githubusercontent.com/34741787/209447113-02305418-4a61-48d5-a6ed-3c5e268029a7.png)
+![image](https://user-images.githubusercontent.com/34741787/209447129-d60026c0-4d16-488b-8ea6-c6c35e08300a.png)
