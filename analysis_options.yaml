@@ -1,11 +1,4 @@
 include: package:flutter_lints/flutter.yaml
 
-linter:
-  rules:
-    - require_trailing_commas
-    - prefer_relative_imports
-    - unnecessary_parenthesis
-    - use_enums
-    - use_colored_box
-    - use_decorated_box
-
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
