@@ -1,3 +1,2 @@
-## 0.0.1
-
-* TODO: Describe initial release.
+## 0.5.0
+- First version of the proxima logger with initial functionality.

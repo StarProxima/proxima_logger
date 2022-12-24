@@ -1,6 +1,6 @@
 name: proxima_logger
-description: Easy to use, customizable, extensible logger which prints beautiful logs.
-version: 0.0.1
+description: Easy to use, customizable, expandable logger that prints beautiful logs.
+version: 0.5.0
 homepage:
 
 environment:
