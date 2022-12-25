@@ -1,4 +1,7 @@
-**Easy to use, customizable, expandable logger that prints beautiful logs**
+
+![proxima_logger_logo](https://user-images.githubusercontent.com/34741787/209454108-6b945ace-d084-46c6-bc0c-95b5cf9cb8dd.jpg)
+
+**Easy to use, customizable, expandable logger that prints beautiful logs.**
 
 ## Getting started
 
@@ -129,5 +132,6 @@
     ```
     
 ## Output
-![image](https://user-images.githubusercontent.com/34741787/209447113-02305418-4a61-48d5-a6ed-3c5e268029a7.png)
-![image](https://user-images.githubusercontent.com/34741787/209447129-d60026c0-4d16-488b-8ea6-c6c35e08300a.png)
+![image](https://user-images.githubusercontent.com/34741787/209454127-c54c1f06-31a7-4be6-bcb2-ddc976c08b8b.png)
+![image](https://user-images.githubusercontent.com/34741787/209454129-aa26cb15-f3f5-46d0-a56c-5a7f746e62b6.png)
+
