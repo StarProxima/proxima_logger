@@ -49,8 +49,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   Log.info,
-                  title:
-                      'Крик души не покинет стены Цитадели. Перед смертью вопрос: что же я наделал? На коленях стою и разбита Скорбь. ',
+                  title: 'Info Title',
                   error: Exception('wepijfowief'),
                 );
               },
@@ -107,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   Log.wtf,
                   title: 'Task json',
-                  error: Exception('WWWWTTTTFFFF EXPEXTION'),
+                  error: Exception('WTF EXCEPTION'),
                   message: Task.random().toMap(),
                 );
               },

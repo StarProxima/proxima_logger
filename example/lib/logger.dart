@@ -16,11 +16,13 @@ final logger = MyLogger(
   ),
   typeSettings: {
     Log.warning: LogSettings(
-      logParts: [
-        LogPart.stack,
-        LogPart.message,
-      ],
-      printEmoji: false,
+      logDecorations: LogDecorations.rounded(120),
+    ),
+    Log.error: LogSettings(
+      logDecorations: LogDecorations.thick(120),
+    ),
+    Log.wtf: LogSettings(
+      logDecorations: LogDecorations.thick(120),
     ),
   },
 );

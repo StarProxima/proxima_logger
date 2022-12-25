@@ -5,7 +5,7 @@
 1. Add package to the project:
     ```yaml
     dependencies:
-        proxima_logger: ^0.5.0
+        proxima_logger: ^0.5.1
     ```
 
 2. Create an instance of ProximaLogger and set the settings as needed:
