@@ -3,6 +3,14 @@
 
 **Easy to use, customizable, expandable logger that prints beautiful logs.**
 
+💎 **Proxima Logger** - the of logging package for your Flutter / Dart app. ✨ With its beautiful and intuitive design, you'll be up and running in no time.
+
+🎨 Customize your logs to your heart's desire with a range of options and styles. 🐛 Need to print out debug messages? No problem. 🌈 Want to add some color to your logs to make them stand out? **Proxima Logger** has you covered.
+
+🚀 But that's not all - Flutter Logging is also highly extensible. 🌍 Need to send your logs to a remote server for safekeeping? **Proxima Logger** makes it possible to integrate with your preferred logging backend. Plus, it's easy to output logs from popular HTTP clients such as Dio.
+
+🙌 In addition, **Proxima Logger** has no dependencies, meaning it won't add any extra weight to your app or introduce any additional vulnerabilities.
+
 ## Getting started
 
 1. Add package to the project:
