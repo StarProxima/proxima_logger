@@ -1,24 +1,12 @@
-import 'log_type.dart';
-
-class OutputEvent {
-  final LogType level;
-  final List<String> lines;
-
-  OutputEvent(this.level, this.lines);
-}
+import 'output_event.dart';
 
 abstract class LogOutput {
-  void init() {}
-
-  void output(OutputEvent event);
-
-  void destroy() {}
+  void output(OutputEvent outputEvent);
 }
 
-class ConsoleOutput extends LogOutput {
+class ConsoleOutput implements LogOutput {
   @override
-  void output(OutputEvent event) {
-    // ignore: avoid_print
-    event.lines.forEach(print);
+  void output(OutputEvent outputEvent) {
+    outputEvent.lines.forEach(print);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:proxima_logger/src/support/output_event.dart';
+
 import 'log_decorator/log_decorator.dart';
 import 'log_formatter/log_formatter.dart';
 import 'support/log_event.dart';
@@ -10,57 +12,64 @@ export 'support/log_type.dart';
 
 /// Use instances of ProximaLogger to print log messages.
 class ProximaLogger {
+  late final LogFormatter _formatter;
+  late final LogDecorator _decorator;
+  late final LogOutput _output;
+
   ProximaLogger({
     LogSettings? settings,
     Map<LogType, LogSettings>? typeSettings,
+    LogFormatter? formatter,
+    LogDecorator? decorator,
+    LogOutput? output,
   }) {
-    this.settings = settings ?? LogSettings();
-    this.typeSettings = typeSettings ?? {};
+    final logTypeSettings = LogTypeSettings(
+      settings ?? const LogSettings(),
+      typeSettings ?? const {},
+    );
+
+    _formatter = formatter ?? DefaultLogFormatter(logTypeSettings);
+    _decorator = decorator ?? DefaultLogDecorator(logTypeSettings);
+    _output = output ?? ConsoleOutput();
   }
-
-  /// The default settings for all log types.
-  late LogSettings settings;
-
-  /// The settings for each log type.
-  late Map<LogType, LogSettings> typeSettings;
-
-  late final LogTypeSettings logTypeSettings =
-      LogTypeSettings(settings, typeSettings);
-
-  late final Formatter _formatter = LogFormatter(logTypeSettings);
-
-  late final LogDecorator _decorator = LogDecorator(logTypeSettings);
-
-  final LogOutput _output = ConsoleOutput();
 
   /// Prints a log message.
   void log(
-    LogType log, {
+    LogType type, {
     String? title,
     dynamic error,
     StackTrace? stack,
     dynamic message,
   }) {
-    var logEvent = LogEvent(
-      log,
+    final logEvent = LogEvent(
+      type,
       title: title,
       error: error,
       stack: stack,
       message: message,
+      time: DateTime.now(),
     );
 
+    logFromEvent(logEvent);
+  }
+
+  void logFromEvent(LogEvent logEvent) {
     FormattedLogEvent formattedLogEvent = _formatter.format(logEvent);
 
-    List<String> output = _decorator.format(formattedLogEvent);
+    List<String> lines = _decorator.format(formattedLogEvent);
 
-    if (output.isNotEmpty) {
-      OutputEvent outputEvent = OutputEvent(log, output);
-      try {
-        _output.output(outputEvent);
-      } catch (e, s) {
-        print(e);
-        print(s);
-      }
+    OutputEvent outputEvent = OutputEvent(
+      type: logEvent.type,
+      logEvent: logEvent,
+      formattedLogEvent: formattedLogEvent,
+      lines: lines,
+    );
+
+    try {
+      _output.output(outputEvent);
+    } catch (e, s) {
+      print(e);
+      print(s);
     }
   }
 }

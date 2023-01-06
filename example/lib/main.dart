@@ -4,17 +4,24 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'logger.dart';
-import 'src/error_handler.dart';
 import 'src/large_nesting_widget.dart';
 import 'src/model.dart';
 
 void main() {
+  void recordError(Object error, StackTrace stackTrace) {
+    logger.log(Log.error, error: error, stack: stackTrace);
+  }
+
+  void recordFlutterError(FlutterErrorDetails error) {
+    logger.log(Log.error, error: error, stack: error.stack);
+  }
+
   runZonedGuarded(
     () {
-      ErrorHandler.init();
+      FlutterError.onError = recordFlutterError;
       runApp(const MyApp());
     },
-    ErrorHandler.recordError,
+    recordError,
   );
 }
 
@@ -49,8 +56,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 logger.log(
                   Log.info,
-                  title:
-                      'Крик души не покинет стены Цитадели. Перед смертью вопрос: что же я наделал? На коленях стою и разбита Скорбь. ',
+                  title: 'Info Title',
                   error: Exception('wepijfowief'),
                 );
               },
@@ -107,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 logger.log(
                   Log.wtf,
                   title: 'Task json',
-                  error: Exception('WWWWTTTTFFFF EXPEXTION'),
+                  error: Exception('WTF EXCEPTION'),
                   message: Task.random().toMap(),
                 );
               },

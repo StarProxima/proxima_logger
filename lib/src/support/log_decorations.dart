@@ -1,7 +1,4 @@
 class LogDecorations {
-  /// The length of the line.
-  final int lineLength;
-
   /// The top left corner of the log.
   final String topLeftCorner;
 
@@ -23,15 +20,8 @@ class LogDecorations {
   /// The middle divider of the log.
   final String middleDivider;
 
-  /// The divider line of the log.
-  final String dividerLine;
-
-  /// The middle divider line of the log.
-  final String middleDividerLine;
-
   /// Creates a new custom [LogDecorations] instance.
-  const LogDecorations.custom(
-    this.lineLength, {
+  const LogDecorations.custom({
     required this.topLeftCorner,
     required this.bottomLeftCorner,
     required this.middleCorner,
@@ -39,42 +29,35 @@ class LogDecorations {
     required this.verticalLine,
     required this.divider,
     required this.middleDivider,
-  })  : dividerLine = divider * lineLength,
-        middleDividerLine = middleDivider * lineLength;
+  });
 
   /// Creates a new [LogDecorations] instance with thin borders.
-  const LogDecorations.thin(this.lineLength)
+  const LogDecorations.thin()
       : topLeftCorner = '┌',
         bottomLeftCorner = '└',
         middleCorner = '├',
         middleTopCorner = '┤',
         verticalLine = '│',
         divider = '─',
-        middleDivider = '┄',
-        dividerLine = '─' * lineLength,
-        middleDividerLine = '┄' * lineLength;
+        middleDivider = '┄';
 
   /// Creates a new [LogDecorations] instance with thick borders.
-  const LogDecorations.thick(this.lineLength)
+  const LogDecorations.thick()
       : topLeftCorner = '╔',
         bottomLeftCorner = '╚',
         middleCorner = '╠',
         middleTopCorner = '╣',
         verticalLine = '║',
         divider = '═',
-        middleDivider = '╌',
-        dividerLine = '═' * lineLength,
-        middleDividerLine = '╌' * lineLength;
+        middleDivider = '╌';
 
   /// Creates a new [LogDecorations] instance with rounded borders.
-  const LogDecorations.rounded(this.lineLength)
+  const LogDecorations.rounded()
       : topLeftCorner = '╭',
         bottomLeftCorner = '╰',
         middleCorner = '├',
         middleTopCorner = '┤',
         verticalLine = '│',
         divider = '─',
-        middleDivider = '┄',
-        dividerLine = '─' * lineLength,
-        middleDividerLine = '┄' * lineLength;
+        middleDivider = '┄';
 }

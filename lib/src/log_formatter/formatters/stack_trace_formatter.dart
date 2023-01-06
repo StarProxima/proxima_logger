@@ -1,8 +1,12 @@
 import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
-class StackTraceFormatter {
-  const StackTraceFormatter(this.settings);
+abstract class StackTraceFormatter {
+  String? format(LogType log, StackTrace? stackTrace, {required bool isError});
+}
+
+class DefaultStackTraceFormatter implements StackTraceFormatter {
+  const DefaultStackTraceFormatter(this.settings);
 
   final LogTypeSettings settings;
 
@@ -39,7 +43,8 @@ class StackTraceFormatter {
     if (match == null) {
       return false;
     }
-    return match.group(1)!.startsWith('packages/logger') ||
+
+    return line.contains('packages/proxima_logger') ||
         match.group(1)!.startsWith('dart-sdk/lib');
   }
 
@@ -48,7 +53,8 @@ class StackTraceFormatter {
     if (match == null) {
       return false;
     }
-    return match.group(1)!.startsWith('package:logger') ||
+
+    return line.contains('package:proxima_logger') ||
         match.group(1)!.startsWith('dart:');
   }
 

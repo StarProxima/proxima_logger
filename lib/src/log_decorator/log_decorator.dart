@@ -5,12 +5,16 @@ import '../support/log_decorations.dart';
 import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
 
-class LogDecorator {
-  LogDecorator(
+abstract class LogDecorator {
+  List<String> format(FormattedLogEvent event);
+}
+
+class DefaultLogDecorator implements LogDecorator {
+  LogTypeSettings settings;
+
+  DefaultLogDecorator(
     this.settings,
   );
-
-  LogTypeSettings settings;
 
   String _getTitle(FormattedLogEvent event) {
     LogSettings st = settings[event.log];
@@ -37,8 +41,8 @@ class LogDecorator {
   }
 
   List<String> format(FormattedLogEvent event) {
-    LogSettings st = settings[event.log];
-    LogDecorations ld = settings[event.log].logDecorations;
+    LogSettings set = settings[event.log];
+    LogDecorations dec = settings[event.log].logDecorations;
     AnsiPen pen = event.log.ansiPen;
 
     String? error = event.error;
@@ -50,10 +54,10 @@ class LogDecorator {
 
     buffer.add(pen.fg(_getTitle(event)));
 
-    String verticalLineAtLevel = st.leftBorder ? '${ld.verticalLine} ' : '';
+    String verticalLineAtLevel = set.leftBorder ? '${dec.verticalLine} ' : '';
 
     String middleDivider =
-        '${st.leftBorder ? ld.middleCorner : ''}${ld.middleDividerLine}';
+        '${set.leftBorder ? dec.middleCorner : ''}${dec.middleDivider * set.lineLength}';
 
     for (LogPart part in event.queue) {
       switch (part) {
@@ -63,7 +67,7 @@ class LogDecorator {
               buffer.add(
                 pen.fg(verticalLineAtLevel) +
                     pen.resetForeground +
-                    (st.selectError
+                    (set.selectError
                         ? pen.bg(
                             pen.isNotNone
                                 ? event.log.ansiPenOnBackground.fg(line)
@@ -100,10 +104,10 @@ class LogDecorator {
       }
     }
 
-    if (st.bottomBorder) {
+    if (set.bottomBorder) {
       buffer.add(
         pen.fg(
-          '${st.leftBorder ? ld.bottomLeftCorner : ld.divider}${ld.dividerLine}',
+          '${set.leftBorder ? dec.bottomLeftCorner : dec.divider}${dec.divider * set.lineLength}',
         ),
       );
     }
