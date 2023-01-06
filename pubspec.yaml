@@ -1,6 +1,6 @@
 name: proxima_logger
 description: Easy to use, customizable, expandable logger that prints beautiful logs.
-version: 0.5.1
+version: 0.6.0
 repository: https://github.com/StarProxima/proxima_logger
 homepage: https://github.com/StarProxima
 
