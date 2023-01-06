@@ -5,12 +5,16 @@ import '../support/log_decorations.dart';
 import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
 
-class LogDecorator {
-  LogDecorator(
+abstract class LogDecorator {
+  List<String> format(FormattedLogEvent event);
+}
+
+class DefaultLogDecorator implements LogDecorator {
+  LogTypeSettings settings;
+
+  DefaultLogDecorator(
     this.settings,
   );
-
-  LogTypeSettings settings;
 
   String _getTitle(FormattedLogEvent event) {
     LogSettings st = settings[event.log];
