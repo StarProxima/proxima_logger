@@ -41,7 +41,7 @@ class ProximaLogger {
     StackTrace? stack,
     dynamic message,
   }) {
-    var logEvent = LogEvent(
+    final logEvent = LogEvent(
       log,
       title: title,
       error: error,

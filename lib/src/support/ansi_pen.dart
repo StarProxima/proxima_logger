@@ -1,19 +1,19 @@
 /// This class handles colorizing of terminal output.
 class AnsiPen {
-  AnsiPen(this.color);
+  const AnsiPen(this.color);
 
-  AnsiPen.none() : color = null;
+  const AnsiPen.none() : color = null;
 
-  AnsiPen.white() : color = 255;
-  AnsiPen.black() : color = 232;
-  AnsiPen.red() : color = 196;
-  AnsiPen.orange() : color = 208;
-  AnsiPen.purple() : color = 199;
-  AnsiPen.gold() : color = 220;
-  AnsiPen.yelow() : color = 226;
-  AnsiPen.blue() : color = 39;
-  AnsiPen.navyBlue() : color = 17;
-  AnsiPen.green() : color = 40;
+  const AnsiPen.white() : color = 255;
+  const AnsiPen.black() : color = 232;
+  const AnsiPen.red() : color = 196;
+  const AnsiPen.orange() : color = 208;
+  const AnsiPen.purple() : color = 199;
+  const AnsiPen.gold() : color = 220;
+  const AnsiPen.yelow() : color = 226;
+  const AnsiPen.blue() : color = 39;
+  const AnsiPen.navyBlue() : color = 17;
+  const AnsiPen.green() : color = 40;
 
   final int? color;
 
