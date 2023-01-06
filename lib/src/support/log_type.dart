@@ -58,9 +58,13 @@ enum Log implements LogType {
     ansiPen: AnsiPen.none(),
   );
 
+  @override
   final String label;
+  @override
   final String emoji;
+  @override
   final AnsiPen ansiPen;
+  @override
   final AnsiPen ansiPenOnBackground;
 
   const Log({
@@ -68,6 +72,6 @@ enum Log implements LogType {
     required this.emoji,
     required this.ansiPen,
     // ignore: unused_element
-    this.ansiPenOnBackground = const AnsiPen.none(),
+    this.ansiPenOnBackground = const AnsiPen.black(),
   });
 }

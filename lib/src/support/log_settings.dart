@@ -25,7 +25,7 @@ class LogTypeSettings {
 
 /// Settings for the logger.
 class LogSettings {
-  LogSettings({
+  const LogSettings({
     this.logParts = const [
       LogPart.stack,
       LogPart.error,
@@ -33,7 +33,7 @@ class LogSettings {
       LogPart.divider,
       LogPart.message,
     ],
-    LogDecorations? logDecorations,
+    this.logDecorations = const LogDecorations.thin(),
     this.printEmoji = true,
     this.printLogTypeLabel = true,
     this.printTitle = true,
@@ -47,12 +47,10 @@ class LogSettings {
     this.selectError = true,
     this.leftBorder = true,
     this.bottomBorder = true,
-  }) {
-    this.logDecorations = logDecorations ?? LogDecorations.thin(lineLength);
-  }
+  });
 
   /// Wrapping style on output.
-  late final LogDecorations logDecorations;
+  final LogDecorations logDecorations;
 
   /// Allows you to set the order in which parts of the log are displayed.
   final List<LogPart> logParts;
