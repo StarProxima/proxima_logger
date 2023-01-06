@@ -1,3 +1,6 @@
+## 0.6.1
+- Update readme, minor fixes.
+
 ## 0.6.0
 - Code refactoring, ability to use custom formatter, decorator and output.
 

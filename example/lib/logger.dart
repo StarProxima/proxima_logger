@@ -22,13 +22,19 @@ final logger = MyLogger(
       logDecorations: LogDecorations.thick(),
     ),
     Log.wtf: const LogSettings(
-      logDecorations: LogDecorations.thick(),
+      logDecorations: LogDecorations.thin(),
     ),
   },
 );
 
 class MyLogger extends ProximaLogger {
-  MyLogger({super.settings, super.typeSettings});
+  MyLogger({
+    super.settings,
+    super.typeSettings,
+    super.formatter,
+    super.decorator,
+    super.output,
+  });
 
   void info(String message) {
     log(Log.info, message: message);
@@ -72,7 +78,7 @@ enum Log implements LogType {
   wtf(
     label: 'wtf',
     emoji: '👾',
-    ansiPen: AnsiPen.red(),
+    ansiPen: AnsiPen.purple(),
   ),
   request(
     label: 'request',
@@ -107,3 +113,27 @@ enum Log implements LogType {
     this.ansiPenOnBackground = const AnsiPen.black(),
   });
 }
+
+// enum Log implements LogType {
+//   custom(
+//     label: 'custom',
+//     emoji: '🦄',
+//     ansiPen: AnsiPen.purple(),
+//   );
+
+//   @override
+//   final String label;
+//   @override
+//   final String emoji;
+//   @override
+//   final AnsiPen ansiPen;
+//   @override
+//   final AnsiPen ansiPenOnBackground;
+
+//   const Log({
+//     required this.label,
+//     required this.emoji,
+//     required this.ansiPen,
+//     this.ansiPenOnBackground = const AnsiPen.black(),
+//   });
+// }

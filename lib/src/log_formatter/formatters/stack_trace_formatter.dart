@@ -43,7 +43,8 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
     if (match == null) {
       return false;
     }
-    return match.group(1)!.startsWith('packages/logger') ||
+
+    return line.contains('packages/proxima_logger') ||
         match.group(1)!.startsWith('dart-sdk/lib');
   }
 
@@ -52,7 +53,8 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
     if (match == null) {
       return false;
     }
-    return match.group(1)!.startsWith('package:logger') ||
+
+    return line.contains('package:proxima_logger') ||
         match.group(1)!.startsWith('dart:');
   }
 

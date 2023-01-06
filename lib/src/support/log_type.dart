@@ -40,7 +40,7 @@ enum Log implements LogType {
   wtf(
     label: 'wtf',
     emoji: '👾',
-    ansiPen: AnsiPen.red(),
+    ansiPen: AnsiPen.purple(),
   ),
   request(
     label: 'request',
