@@ -15,6 +15,14 @@ final logger = MyLogger(
     printLogTypeLabel: true,
   ),
   typeSettings: {
+    Log.debug: const LogSettings(
+      logParts: [
+        LogPart.stack,
+        LogPart.time,
+        LogPart.message,
+      ],
+      logDecorations: LogDecorations.rounded(),
+    ),
     Log.warning: const LogSettings(
       logDecorations: LogDecorations.rounded(),
     ),
