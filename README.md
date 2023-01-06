@@ -16,13 +16,13 @@
 1. Add package to the project:
     ```yaml
     dependencies:
-        proxima_logger: ^0.5.1
+        proxima_logger: ^0.6.1
     ```
 
-2. Create an instance of ProximaLogger and set the settings as needed:
+2. Create an instance of Proxima Logger. You can set general settings for logging, including the order in which parts of the log are output, the style of the borders, and more if you like.
    ```dart
-    final logger = ProximaLogger(
-        settings: LogSettings(
+    final logger = MyLogger(
+        settings: const LogSettings(
             logParts: [
                 LogPart.stack,
                 LogPart.error,
@@ -35,109 +35,120 @@
             printLogTypeLabel: true,
         ),
         typeSettings: {
-            Log.warning: LogSettings(
-                logParts: [
-                    LogPart.stack,
-                    LogPart.message,
-                ],
-                printEmoji: false,
+            Log.warning: const LogSettings(
+                logDecorations: LogDecorations.rounded(),
+            ),
+            Log.error: const LogSettings(
+                logDecorations: LogDecorations.thick(),
             ),
         },
     );
    ```
 
-3. If necessary, you can implement the LogType class and create your own log types.
-    ```dart
-    enum Log implements LogType {
-        info,
-        custom;
+# Usage
+   Use logger.log() anywhere in the program.
+```dart
+logger.log(
+    Log.info,
+    title: 'Log title',
+);
 
-        @override
-        String get label {
-            switch (this) {
-            case Log.info:
-                return 'info';
-            case Log.custom:
-                return 'custom';
-            }
-        }
+logger.log(
+    Log.debug,
+    message: 'Debug message',
+);
 
-        @override
-        String get emoji {
-            switch (this) {
-            case Log.info:
-                return '💡';
-            case Log.custom:
-                return '🦄';
-            }
-        }
-
-        @override
-        AnsiPen get ansiPen {
-            switch (this) {
-            case Log.info:
-                return AnsiPen.none();
-            case Log.custom:
-                return AnsiPen.purple();
-            }
-        }
-
-        @override
-        AnsiPen get ansiPenOnBackground {
-            return AnsiPen.black();
-        }
-    }
-    ```
-
-## Usage
-1. Use logger.log() anywhere in the program.
-    ```dart
+try {
+    //...
+} catch (e, s) {
     logger.log(
-        Log.info,
-        title: 'Log title',
+        Log.error,
+        title: 'Some error',
+        error: e,
+        stack: s,
     );
+}
+```
+# Notes
 
-    logger.log(
-        Log.debug,
-        message: 'Debug message'
+To handle errors automatically, add runZonedGuarded() to main().
+```dart
+void main() {
+  void recordError(Object error, StackTrace stackTrace) {
+    logger.log(Log.error, error: error, stack: stackTrace);
+  }
+
+  void recordFlutterError(FlutterErrorDetails error) {
+    logger.log(Log.error, error: error, stack: error.stack);
+  }
+
+  runZonedGuarded(
+    () {
+      FlutterError.onError = recordFlutterError;
+      runApp(const MyApp());
+    },
+    recordError,
+  );
+}
+```
+
+You can write your own wrapper over the logger to quickly use the required logging types and conveniently log requests from an http client, such as Dio.
+```dart
+class MyLogger extends ProximaLogger {
+  MyLogger({
+    super.settings,
+    super.typeSettings,
+    super.formatter,
+    super.decorator,
+    super.output,
+  });
+
+  void info(String message) {
+    log(Log.info, message: message);
+  }
+
+  void error(Error error, StackTrace stack, [String? message]) {
+    log(Log.error, error: error, stack: stack, message: message);
+  }
+
+  void response(Response response) {
+    log(
+      Log.response,
+      title:
+          '| ${response.requestOptions.method} | ${response.statusCode} | ${response.requestOptions.path}',
+      message: response.data,
     );
+  }
+}
+```
 
-    try {
-        //...
-    } catch (e, s) {
-        logger.log(
-            Log.error,
-            title: 'Some error',
-            error: e,
-            stack: s,
-        );
-    }
-    ```
+If necessary, you can implement the LogType class and create your own log types.
+```dart
+enum Log implements LogType {
+  custom(
+    label: 'custom',
+    emoji: '🦄',
+    ansiPen: AnsiPen.purple(),
+  );
 
-2. Or write your own wrapper over logger for convenience.
-    ```dart
-    final logger = MyLogger();
+  @override
+  final String label;
+  @override
+  final String emoji;
+  @override
+  final AnsiPen ansiPen;
+  @override
+  final AnsiPen ansiPenOnBackground;
 
-    class MyLogger extends ProximaLogger {
-        MyLogger({super.settings, super.typeSettings});
+  const Log({
+    required this.label,
+    required this.emoji,
+    required this.ansiPen,
+    this.ansiPenOnBackground = const AnsiPen.black(),
+  });
+}
+```
 
-        void info(String message) {
-            log(Log.info, message: message);
-        }
-
-        void error(Error error, StackTrace stack, [String? message]) {
-            log(Log.error, error: error, stack: stack, message: message);
-        }
-
-        void response(Response response) {
-            log(
-                Log.response,
-                title: '| ${response.requestOptions.method} | ${response.statusCode} | ${response.requestOptions.path}',
-                message: response.data,
-            );
-        }
-    }
-    ```
     
 ## Output
 ![image](https://user-images.githubusercontent.com/34741787/209454127-c54c1f06-31a7-4be6-bcb2-ddc976c08b8b.png)
