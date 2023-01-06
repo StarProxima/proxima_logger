@@ -35,26 +35,31 @@ class ProximaLogger {
 
   /// Prints a log message.
   void log(
-    LogType log, {
+    LogType type, {
     String? title,
     dynamic error,
     StackTrace? stack,
     dynamic message,
   }) {
     final logEvent = LogEvent(
-      log,
+      type,
       title: title,
       error: error,
       stack: stack,
       message: message,
+      time: DateTime.now(),
     );
 
+    logFromEvent(logEvent);
+  }
+
+  void logFromEvent(LogEvent logEvent) {
     FormattedLogEvent formattedLogEvent = _formatter.format(logEvent);
 
     List<String> lines = _decorator.format(formattedLogEvent);
 
     OutputEvent outputEvent = OutputEvent(
-      type: log,
+      type: logEvent.type,
       logEvent: logEvent,
       formattedLogEvent: formattedLogEvent,
       lines: lines,

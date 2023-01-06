@@ -41,7 +41,7 @@ class DefaultLogFormatter implements LogFormatter {
   @override
   FormattedLogEvent format(LogEvent event) {
     List<LogPart> queue =
-        queueFormatter.format(event, settings[event.log].logParts);
+        queueFormatter.format(event, settings[event.type].logParts);
 
     String? error;
 
@@ -53,16 +53,16 @@ class DefaultLogFormatter implements LogFormatter {
 
     if (queue.contains(LogPart.stack)) {
       if (event.stack == null) {
-        if (settings[event.log].stackTraceMethodCount > 0) {
+        if (settings[event.type].stackTraceMethodCount > 0) {
           stack = stackFormatter.format(
-            event.log,
+            event.type,
             StackTrace.current,
             isError: false,
           );
         }
-      } else if (settings[event.log].errorStackTraceMethodCount > 0) {
+      } else if (settings[event.type].errorStackTraceMethodCount > 0) {
         stack = stackFormatter.format(
-          event.log,
+          event.type,
           event.stack,
           isError: true,
         );
@@ -72,7 +72,7 @@ class DefaultLogFormatter implements LogFormatter {
     String? time;
 
     if (queue.contains(LogPart.time)) {
-      time = timeFormatter.getLogTime(DateTime.now(), event.log);
+      time = timeFormatter.getLogTime(event.time, event.type);
     }
 
     String? message;
@@ -82,7 +82,7 @@ class DefaultLogFormatter implements LogFormatter {
     }
 
     FormattedLogEvent formattedLogEvent = FormattedLogEvent(
-      log: event.log,
+      log: event.type,
       queue: queue,
       title: event.title,
       error: error,
