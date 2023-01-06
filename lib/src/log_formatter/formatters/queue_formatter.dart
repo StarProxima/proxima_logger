@@ -1,7 +1,11 @@
 import '../../support/log_event.dart';
 import '../../support/log_settings.dart';
 
-class QueueFormatter {
+abstract class QueueFormatter {
+  List<LogPart> format(LogEvent event, List<LogPart> list);
+}
+
+class DefaultQueueFormatter implements QueueFormatter {
   List<LogPart> format(LogEvent event, List<LogPart> list) {
     List<LogPart> queue = [];
 

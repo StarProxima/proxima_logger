@@ -1,8 +1,12 @@
 import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
-class StackTraceFormatter {
-  const StackTraceFormatter(this.settings);
+abstract class StackTraceFormatter {
+  String? format(LogType log, StackTrace? stackTrace, {required bool isError});
+}
+
+class DefaultStackTraceFormatter implements StackTraceFormatter {
+  const DefaultStackTraceFormatter(this.settings);
 
   final LogTypeSettings settings;
 

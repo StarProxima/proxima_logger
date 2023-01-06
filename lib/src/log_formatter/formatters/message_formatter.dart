@@ -1,6 +1,10 @@
 import 'dart:convert';
 
-class MessageFormatter {
+abstract class MessageFormatter {
+  String format(dynamic message);
+}
+
+class DefaultMessageFormatter implements MessageFormatter {
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
     return object.toString();

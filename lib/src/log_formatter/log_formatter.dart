@@ -6,31 +6,37 @@ import 'formatters/message_formatter.dart';
 import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
 
-abstract class Formatter {
-  void init() {}
-
+abstract class LogFormatter {
   FormattedLogEvent format(LogEvent event);
-
-  void destroy() {}
 }
 
-class LogFormatter extends Formatter {
-  LogFormatter(
-    this.settings,
-  );
+class DefaultLogFormatter implements LogFormatter {
+  final LogTypeSettings settings;
 
-  LogTypeSettings settings;
+  late final QueueFormatter queueFormatter;
+  late final MessageFormatter messageFormatter;
+  late final StackTraceFormatter stackFormatter;
+  late final LogTimeFormatter timeFormatter;
 
-  QueueFormatter queueFormatter = QueueFormatter();
-
-  MessageFormatter messageFormatter = MessageFormatter();
-
-  late StackTraceFormatter stackFormatter = StackTraceFormatter(settings);
-
-  late LogTimeFormatter timeFormatter = LogTimeFormatter(
-    settings,
-    startAppTime: DateTime.now(),
-  );
+  DefaultLogFormatter(
+    this.settings, {
+    QueueFormatter? queueFormatter,
+    MessageFormatter? messageFormatter,
+    StackTraceFormatter? stackFormatter,
+    LogTimeFormatter? logTimeFormatter,
+  }) {
+    this.queueFormatter = queueFormatter ?? DefaultQueueFormatter();
+    this.messageFormatter = messageFormatter ?? DefaultMessageFormatter();
+    this.stackFormatter = stackFormatter ??
+        DefaultStackTraceFormatter(
+          settings,
+        );
+    this.timeFormatter = logTimeFormatter ??
+        DefaultLogTimeFormatter(
+          settings,
+          startAppTime: DateTime.now(),
+        );
+  }
 
   @override
   FormattedLogEvent format(LogEvent event) {
@@ -66,7 +72,7 @@ class LogFormatter extends Formatter {
     String? time;
 
     if (queue.contains(LogPart.time)) {
-      time = timeFormatter.getLogTime(event.log);
+      time = timeFormatter.getLogTime(DateTime.now(), event.log);
     }
 
     String? message;

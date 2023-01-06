@@ -10,28 +10,26 @@ export 'support/log_type.dart';
 
 /// Use instances of ProximaLogger to print log messages.
 class ProximaLogger {
+  late final LogFormatter _formatter;
+  late final LogDecorator _decorator;
+  late final LogOutput _output;
+
   ProximaLogger({
     LogSettings? settings,
     Map<LogType, LogSettings>? typeSettings,
+    LogFormatter? formatter,
+    LogDecorator? decorator,
+    LogOutput? output,
   }) {
-    this.settings = settings ?? LogSettings();
-    this.typeSettings = typeSettings ?? {};
+    final logTypeSettings = LogTypeSettings(
+      settings ?? const LogSettings(),
+      typeSettings ?? const {},
+    );
+
+    _formatter = formatter ?? DefaultLogFormatter(logTypeSettings);
+    _decorator = decorator ?? LogDecorator(logTypeSettings);
+    _output = output ?? ConsoleOutput();
   }
-
-  /// The default settings for all log types.
-  late LogSettings settings;
-
-  /// The settings for each log type.
-  late Map<LogType, LogSettings> typeSettings;
-
-  late final LogTypeSettings logTypeSettings =
-      LogTypeSettings(settings, typeSettings);
-
-  late final Formatter _formatter = LogFormatter(logTypeSettings);
-
-  late final LogDecorator _decorator = LogDecorator(logTypeSettings);
-
-  final LogOutput _output = ConsoleOutput();
 
   /// Prints a log message.
   void log(

@@ -1,11 +1,15 @@
 import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
-class LogTimeFormatter {
-  LogTimeFormatter(this.settings, {required this.startAppTime});
+abstract class LogTimeFormatter {
+  String getLogTime(DateTime time, LogType log);
+}
 
-  LogTypeSettings settings;
+class DefaultLogTimeFormatter implements LogTimeFormatter {
+  final LogTypeSettings settings;
   final DateTime startAppTime;
+
+  DefaultLogTimeFormatter(this.settings, {required this.startAppTime});
 
   static String _fourDigits(int n) {
     if (n >= 1000) return "$n";
@@ -25,7 +29,7 @@ class LogTimeFormatter {
     return '0$n';
   }
 
-  String getLogTime(LogType log) {
+  String getLogTime(DateTime time, LogType log) {
     DateTime now = DateTime.now();
 
     String date = '';
