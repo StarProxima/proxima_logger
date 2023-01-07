@@ -6,13 +6,13 @@ abstract class LogTimeFormatter {
   String getLogTime(DateTime time, LogType log);
 
   /// Default implementation of [LogTimeFormatter].
-  factory LogTimeFormatter(LogSettings settings,
+  factory LogTimeFormatter(LogTypeSettings settings,
           {required DateTime startAppTime}) =>
       _DefaultLogTimeFormatter(settings, startAppTime: startAppTime);
 }
 
 class _DefaultLogTimeFormatter implements LogTimeFormatter {
-  final LogSettings settings;
+  final LogTypeSettings settings;
   final DateTime startAppTime;
 
   _DefaultLogTimeFormatter(this.settings, {required this.startAppTime});

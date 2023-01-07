@@ -18,11 +18,15 @@ class ProximaLogger {
 
   ProximaLogger({
     LogSettings? settings,
+    Map<LogType, LogSettings>? typeSettings,
     LogFormatter? formatter,
     LogDecorator? decorator,
     LogOutput? output,
   }) {
-    final logTypeSettings = settings ?? LogSettings();
+    final logTypeSettings = LogTypeSettings(
+      settings ?? const LogSettings(),
+      typeSettings ?? const {},
+    );
 
     _formatter = formatter ?? LogFormatter(logTypeSettings);
     _decorator = decorator ?? LogDecorator(logTypeSettings);
