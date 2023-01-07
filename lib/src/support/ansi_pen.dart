@@ -1,6 +1,10 @@
 /// This class handles colorizing of terminal output.
 class AnsiPen {
-  const AnsiPen(this.color);
+  const AnsiPen(this.color)
+      : assert(
+          color == null || color >= 0 && color <= 255,
+          'Color must be between 0 and 255',
+        );
 
   const AnsiPen.none() : color = null;
 

@@ -24,30 +24,6 @@ class LogTypeSettings {
 
 /// Settings for the logger.
 class LogSettings {
-  const LogSettings({
-    this.logParts = const [
-      LogPart.stack,
-      LogPart.error,
-      LogPart.time,
-      LogPart.divider,
-      LogPart.message,
-    ],
-    this.logDecorations = const LogDecorations.thin(),
-    this.printEmoji = true,
-    this.printLogTypeLabel = true,
-    this.printTitle = true,
-    this.printDateInTime = true,
-    this.printTimeSinceStartInTime = true,
-    this.stackTraceMethodCount = 2,
-    this.errorStackTraceMethodCount = 8,
-    this.stackTraceBeginIndex = 2,
-    this.lineLength = 120,
-    this.decorateLogTypeLabel = true,
-    this.selectError = true,
-    this.leftBorder = true,
-    this.bottomBorder = true,
-  });
-
   /// Wrapping style on output.
   final LogDecorations logDecorations;
 
@@ -92,4 +68,46 @@ class LogSettings {
 
   /// Whether to print the bottom border.
   final bool bottomBorder;
+
+  final Map<String, Object> customSettings;
+
+  const LogSettings({
+    this.logParts = const [
+      LogPart.stack,
+      LogPart.error,
+      LogPart.time,
+      LogPart.divider,
+      LogPart.message,
+    ],
+    this.logDecorations = const LogDecorations.thin(),
+    this.printEmoji = true,
+    this.printLogTypeLabel = true,
+    this.printTitle = true,
+    this.printDateInTime = true,
+    this.printTimeSinceStartInTime = true,
+    this.stackTraceMethodCount = 2,
+    this.errorStackTraceMethodCount = 8,
+    this.stackTraceBeginIndex = 2,
+    this.lineLength = 120,
+    this.decorateLogTypeLabel = true,
+    this.selectError = true,
+    this.leftBorder = true,
+    this.bottomBorder = true,
+    this.customSettings = const {},
+  })  : assert(
+          stackTraceMethodCount >= 0,
+          'stackTraceMethodCount must be >= 0',
+        ),
+        assert(
+          errorStackTraceMethodCount >= 0,
+          'errorStackTraceMethodCount must be >= 0',
+        ),
+        assert(
+          stackTraceBeginIndex >= 0,
+          'stackTraceBeginIndex must be >= 0',
+        ),
+        assert(
+          lineLength >= 0,
+          'lineLength must be >= 0',
+        );
 }

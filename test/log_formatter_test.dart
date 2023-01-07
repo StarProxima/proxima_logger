@@ -5,7 +5,7 @@ import 'package:proxima_logger/src/support/log_event.dart';
 
 void main() {
   test('Test formatting of log event with default settings', () {
-    var formatter = DefaultLogFormatter(
+    var formatter = LogFormatter(
       LogTypeSettings(
         LogSettings(),
         {},
@@ -39,7 +39,7 @@ void main() {
       printEmoji: false,
     );
 
-    var formatter = DefaultLogFormatter(LogTypeSettings(settings, {}));
+    var formatter = LogFormatter(LogTypeSettings(settings, {}));
     var logEvent = LogEvent(
       Log.warning,
       title: 'Test log event',
