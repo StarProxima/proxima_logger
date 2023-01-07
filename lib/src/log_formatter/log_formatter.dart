@@ -11,12 +11,11 @@ abstract class LogFormatter {
   FormattedLogEvent format(LogEvent event);
 
   /// Default implementation of [LogFormatter].
-  factory LogFormatter(LogTypeSettings settings) =>
-      _DefaultLogFormatter(settings);
+  factory LogFormatter(LogSettings settings) => _DefaultLogFormatter(settings);
 }
 
 class _DefaultLogFormatter implements LogFormatter {
-  final LogTypeSettings settings;
+  final LogSettings settings;
 
   late final QueueFormatter queueFormatter;
   late final MessageFormatter messageFormatter;

@@ -6,14 +6,14 @@ abstract class StackTraceFormatter {
   String? format(LogType log, StackTrace? stackTrace, {required bool isError});
 
   /// Default implementation of [StackTraceFormatter]. Removes unnecessary lines in the [StackTrace].
-  factory StackTraceFormatter(LogTypeSettings settings) =>
+  factory StackTraceFormatter(LogSettings settings) =>
       _DefaultStackTraceFormatter(settings);
 }
 
 class _DefaultStackTraceFormatter implements StackTraceFormatter {
   const _DefaultStackTraceFormatter(this.settings);
 
-  final LogTypeSettings settings;
+  final LogSettings settings;
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   static final _deviceStackTraceRegex =

@@ -10,19 +10,18 @@ abstract class LogDecorator {
   List<String> decorate(FormattedLogEvent event);
 
   /// Default implementation of [LogDecorator]. Decorates logs with borders, emojis and colors.
-  factory LogDecorator(LogTypeSettings settings) =>
-      _DefaultLogDecorator(settings);
+  factory LogDecorator(LogSettings settings) => _DefaultLogDecorator(settings);
 }
 
 class _DefaultLogDecorator implements LogDecorator {
-  LogTypeSettings settings;
+  LogSettings settings;
 
   _DefaultLogDecorator(
     this.settings,
   );
 
   String _getTitle(FormattedLogEvent event) {
-    LogSettings st = settings[event.log];
+    LogTypeSettings st = settings[event.log];
     LogDecorations ld = settings[event.log].logDecorations;
 
     String topLeftTitleCorner =
@@ -46,7 +45,7 @@ class _DefaultLogDecorator implements LogDecorator {
   }
 
   List<String> decorate(FormattedLogEvent event) {
-    LogSettings set = settings[event.log];
+    LogTypeSettings set = settings[event.log];
     LogDecorations dec = settings[event.log].logDecorations;
     AnsiPen pen = event.log.ansiPen;
 

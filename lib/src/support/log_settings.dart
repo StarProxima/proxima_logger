@@ -11,19 +11,23 @@ enum LogPart {
   divider,
 }
 
-class LogTypeSettings {
-  final LogSettings settings;
-  final Map<LogType, LogSettings> logTypeSettings;
+class LogSettings {
+  final LogTypeSettings defaultSettings;
+  final Map<LogType, LogTypeSettings> logTypeSettings;
 
-  const LogTypeSettings(this.settings, this.logTypeSettings);
+  /// Settings for the logger.
+  const LogSettings({
+    this.defaultSettings = const LogTypeSettings(),
+    this.logTypeSettings = const {},
+  });
 
-  LogSettings operator [](LogType key) {
-    return logTypeSettings[key] ?? settings;
+  LogTypeSettings operator [](LogType key) {
+    return logTypeSettings[key] ?? defaultSettings;
   }
 }
 
-/// Settings for the logger.
-class LogSettings {
+/// Settings for a log type.
+class LogTypeSettings {
   /// Wrapping style on output.
   final LogDecorations logDecorations;
 
@@ -71,7 +75,7 @@ class LogSettings {
 
   final Map<String, Object> customSettings;
 
-  const LogSettings({
+  const LogTypeSettings({
     this.logParts = const [
       LogPart.stack,
       LogPart.error,
