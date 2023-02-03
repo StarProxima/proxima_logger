@@ -6,10 +6,10 @@ abstract class QueueFormatter {
   List<LogPart> format(LogEvent event, List<LogPart> list);
 
   /// Default implementation of [QueueFormatter]. Removes unnecessary [LogPart] if there is no data for them.
-  factory QueueFormatter() => _DefaultQueueFormatter();
+  factory QueueFormatter() => DefaultQueueFormatter();
 }
 
-class _DefaultQueueFormatter implements QueueFormatter {
+class DefaultQueueFormatter implements QueueFormatter {
   List<LogPart> format(LogEvent event, List<LogPart> list) {
     List<LogPart> queue = [];
 

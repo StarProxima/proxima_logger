@@ -8,14 +8,14 @@ abstract class LogTimeFormatter {
   /// Default implementation of [LogTimeFormatter].
   factory LogTimeFormatter(LogTypeSettings settings,
           {required DateTime startAppTime}) =>
-      _DefaultLogTimeFormatter(settings, startAppTime: startAppTime);
+      DefaultLogTimeFormatter(settings, startAppTime: startAppTime);
 }
 
-class _DefaultLogTimeFormatter implements LogTimeFormatter {
+class DefaultLogTimeFormatter implements LogTimeFormatter {
   final LogTypeSettings settings;
   final DateTime startAppTime;
 
-  _DefaultLogTimeFormatter(this.settings, {required this.startAppTime});
+  DefaultLogTimeFormatter(this.settings, {required this.startAppTime});
 
   static String _fourDigits(int n) {
     if (n >= 1000) return "$n";

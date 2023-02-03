@@ -12,10 +12,10 @@ abstract class LogFormatter {
 
   /// Default implementation of [LogFormatter].
   factory LogFormatter(LogTypeSettings settings) =>
-      _DefaultLogFormatter(settings);
+      DefaultLogFormatter(settings);
 }
 
-class _DefaultLogFormatter implements LogFormatter {
+class DefaultLogFormatter implements LogFormatter {
   final LogTypeSettings settings;
 
   late final QueueFormatter queueFormatter;
@@ -23,7 +23,7 @@ class _DefaultLogFormatter implements LogFormatter {
   late final StackTraceFormatter stackFormatter;
   late final LogTimeFormatter timeFormatter;
 
-  _DefaultLogFormatter(
+  DefaultLogFormatter(
     this.settings, {
     QueueFormatter? queueFormatter,
     MessageFormatter? messageFormatter,

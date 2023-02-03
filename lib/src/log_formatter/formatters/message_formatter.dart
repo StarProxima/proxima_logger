@@ -5,10 +5,10 @@ abstract class MessageFormatter {
   String format(dynamic message);
 
   /// Default implementation of [MessageFormatter].
-  factory MessageFormatter() => _DefaultMessageFormatter();
+  factory MessageFormatter() => DefaultMessageFormatter();
 }
 
-class _DefaultMessageFormatter implements MessageFormatter {
+class DefaultMessageFormatter implements MessageFormatter {
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
     return object.toString();

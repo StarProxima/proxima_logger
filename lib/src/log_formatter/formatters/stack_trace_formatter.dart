@@ -7,11 +7,11 @@ abstract class StackTraceFormatter {
 
   /// Default implementation of [StackTraceFormatter]. Removes unnecessary lines in the [StackTrace].
   factory StackTraceFormatter(LogTypeSettings settings) =>
-      _DefaultStackTraceFormatter(settings);
+      DefaultStackTraceFormatter(settings);
 }
 
-class _DefaultStackTraceFormatter implements StackTraceFormatter {
-  const _DefaultStackTraceFormatter(this.settings);
+class DefaultStackTraceFormatter implements StackTraceFormatter {
+  const DefaultStackTraceFormatter(this.settings);
 
   final LogTypeSettings settings;
 

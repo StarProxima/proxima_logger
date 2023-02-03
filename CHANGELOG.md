@@ -1,3 +1,6 @@
+## 0.6.2
+- Update example, fix export.
+
 ## 0.6.1
 - Update readme, minor fixes.
 

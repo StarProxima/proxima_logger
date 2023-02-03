@@ -11,13 +11,13 @@ abstract class LogDecorator {
 
   /// Default implementation of [LogDecorator]. Decorates logs with borders, emojis and colors.
   factory LogDecorator(LogTypeSettings settings) =>
-      _DefaultLogDecorator(settings);
+      DefaultLogDecorator(settings);
 }
 
-class _DefaultLogDecorator implements LogDecorator {
+class DefaultLogDecorator implements LogDecorator {
   LogTypeSettings settings;
 
-  _DefaultLogDecorator(
+  DefaultLogDecorator(
     this.settings,
   );
 
