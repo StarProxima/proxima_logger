@@ -1,7 +1,5 @@
 import 'package:proxima_logger/proxima_logger.dart';
-import 'package:proxima_logger/src/log_formatter/log_formatter.dart';
 import 'package:test/test.dart';
-import 'package:proxima_logger/src/support/log_event.dart';
 
 void main() {
   test('Test formatting of log event with default settings', () {
