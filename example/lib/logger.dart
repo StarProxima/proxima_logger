@@ -15,6 +15,14 @@ final logger = MyLogger(
     printLogTypeLabel: true,
   ),
   typeSettings: {
+    Log.debug: const LogSettings(
+      logParts: [
+        LogPart.stack,
+        LogPart.time,
+        LogPart.message,
+      ],
+      logDecorations: LogDecorations.rounded(),
+    ),
     Log.warning: const LogSettings(
       logDecorations: LogDecorations.rounded(),
     ),
@@ -113,27 +121,3 @@ enum Log implements LogType {
     this.ansiPenOnBackground = const AnsiPen.black(),
   });
 }
-
-// enum Log implements LogType {
-//   custom(
-//     label: 'custom',
-//     emoji: '🦄',
-//     ansiPen: AnsiPen.purple(),
-//   );
-
-//   @override
-//   final String label;
-//   @override
-//   final String emoji;
-//   @override
-//   final AnsiPen ansiPen;
-//   @override
-//   final AnsiPen ansiPenOnBackground;
-
-//   const Log({
-//     required this.label,
-//     required this.emoji,
-//     required this.ansiPen,
-//     this.ansiPenOnBackground = const AnsiPen.black(),
-//   });
-// }

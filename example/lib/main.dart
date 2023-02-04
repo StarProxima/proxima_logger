@@ -3,7 +3,12 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'logger.dart';
+import 'logger.dart' show Log;
+
+import 'logger.dart' show logger;
+//or
+//import 'logger_custom.dart' show logger;
+
 import 'src/large_nesting_widget.dart';
 import 'src/model.dart';
 

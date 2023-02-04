@@ -1,8 +1,12 @@
 import '../../support/log_event.dart';
 import '../../support/log_settings.dart';
 
+/// A [QueueFormatter] formats a list of [LogPart]s.
 abstract class QueueFormatter {
   List<LogPart> format(LogEvent event, List<LogPart> list);
+
+  /// Default implementation of [QueueFormatter]. Removes unnecessary [LogPart] if there is no data for them.
+  factory QueueFormatter() => DefaultQueueFormatter();
 }
 
 class DefaultQueueFormatter implements QueueFormatter {

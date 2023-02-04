@@ -5,8 +5,13 @@ import '../support/log_decorations.dart';
 import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
 
+/// Interface for [LogDecorator].
 abstract class LogDecorator {
-  List<String> format(FormattedLogEvent event);
+  List<String> decorate(FormattedLogEvent event);
+
+  /// Default implementation of [LogDecorator]. Decorates logs with borders, emojis and colors.
+  factory LogDecorator(LogTypeSettings settings) =>
+      DefaultLogDecorator(settings);
 }
 
 class DefaultLogDecorator implements LogDecorator {
@@ -40,7 +45,7 @@ class DefaultLogDecorator implements LogDecorator {
     return '$topLeftTitleCorner$emoji$logTypeLabel$titleStr';
   }
 
-  List<String> format(FormattedLogEvent event) {
+  List<String> decorate(FormattedLogEvent event) {
     LogSettings set = settings[event.log];
     LogDecorations dec = settings[event.log].logDecorations;
     AnsiPen pen = event.log.ansiPen;

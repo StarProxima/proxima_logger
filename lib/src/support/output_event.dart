@@ -1,6 +1,3 @@
-import 'package:proxima_logger/src/support/formatted_log_event.dart';
-import 'package:proxima_logger/src/support/log_event.dart';
-
 import '../../proxima_logger.dart';
 
 class OutputEvent {

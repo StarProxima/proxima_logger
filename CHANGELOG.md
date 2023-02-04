@@ -1,3 +1,9 @@
+## 0.6.3
+- Dart fix and format.
+
+## 0.6.2
+- Update example, fix export.
+
 ## 0.6.1
 - Update readme, minor fixes.
 

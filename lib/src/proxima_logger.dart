@@ -28,8 +28,8 @@ class ProximaLogger {
       typeSettings ?? const {},
     );
 
-    _formatter = formatter ?? DefaultLogFormatter(logTypeSettings);
-    _decorator = decorator ?? DefaultLogDecorator(logTypeSettings);
+    _formatter = formatter ?? LogFormatter(logTypeSettings);
+    _decorator = decorator ?? LogDecorator(logTypeSettings);
     _output = output ?? ConsoleOutput();
   }
 
@@ -54,18 +54,18 @@ class ProximaLogger {
   }
 
   void logFromEvent(LogEvent logEvent) {
-    FormattedLogEvent formattedLogEvent = _formatter.format(logEvent);
-
-    List<String> lines = _decorator.format(formattedLogEvent);
-
-    OutputEvent outputEvent = OutputEvent(
-      type: logEvent.type,
-      logEvent: logEvent,
-      formattedLogEvent: formattedLogEvent,
-      lines: lines,
-    );
-
     try {
+      FormattedLogEvent formattedLogEvent = _formatter.format(logEvent);
+
+      List<String> lines = _decorator.decorate(formattedLogEvent);
+
+      OutputEvent outputEvent = OutputEvent(
+        type: logEvent.type,
+        logEvent: logEvent,
+        formattedLogEvent: formattedLogEvent,
+        lines: lines,
+      );
+
       _output.output(outputEvent);
     } catch (e, s) {
       print(e);

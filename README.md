@@ -16,7 +16,7 @@
 1. Add package to the project:
     ```yaml
     dependencies:
-        proxima_logger: ^0.6.1
+        proxima_logger: ^0.6.3
     ```
 
 2. Create an instance of Proxima Logger. You can set general settings for logging, including the order in which parts of the log are output, the style of the borders, and more if you like.

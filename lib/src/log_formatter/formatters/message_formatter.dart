@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+/// A [MessageFormatter] formats a dynamic message into a [String].
 abstract class MessageFormatter {
   String format(dynamic message);
+
+  /// Default implementation of [MessageFormatter].
+  factory MessageFormatter() => DefaultMessageFormatter();
 }
 
 class DefaultMessageFormatter implements MessageFormatter {
