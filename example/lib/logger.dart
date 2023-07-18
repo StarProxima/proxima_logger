@@ -37,7 +37,7 @@ final logger = MyLogger(
   },
 );
 
-class MyLogger extends ProximaLogger {
+class MyLogger extends ProximaLoggerBase {
   MyLogger({
     super.settings,
     super.formatter,
@@ -105,6 +105,14 @@ enum Log implements ILogType {
     ansiPen: AnsiPen.none(),
   );
 
+  const Log({
+    required this.label,
+    required this.emoji,
+    required this.ansiPen,
+    // ignore: unused_element
+    this.ansiPenOnBackground = const AnsiPen.black(),
+  });
+
   @override
   final String label;
   @override
@@ -113,12 +121,4 @@ enum Log implements ILogType {
   final AnsiPen ansiPen;
   @override
   final AnsiPen ansiPenOnBackground;
-
-  const Log({
-    required this.label,
-    required this.emoji,
-    required this.ansiPen,
-    // ignore: unused_element
-    this.ansiPenOnBackground = const AnsiPen.black(),
-  });
 }

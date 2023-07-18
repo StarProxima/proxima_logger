@@ -194,11 +194,8 @@ class Task implements Comparable {
   }
 
   @override
-  int compareTo(other) {
-    if (other is Task) {
-      return text.compareTo(other.text);
-    }
-    return 0;
+  int compareTo(covariant Task other) {
+    return text.compareTo(other.text);
   }
 }
 

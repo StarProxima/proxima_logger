@@ -1,6 +1,7 @@
 library proxima_logger;
 
 export 'src/proxima_logger.dart';
+export 'src/proxima_logger_base.dart';
 
 export 'src/log_decorator/log_decorator.dart';
 

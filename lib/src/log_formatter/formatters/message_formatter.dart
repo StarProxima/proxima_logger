@@ -14,6 +14,7 @@ class MessageFormatter implements IMessageFormatter {
 
   @override
   String format(dynamic message) {
+    // ignore: avoid_dynamic_calls
     final finalMessage = message is Function ? message() : message;
     if (finalMessage is Map || finalMessage is Iterable) {
       final encoder = JsonEncoder.withIndent('  ', toEncodableFallback);

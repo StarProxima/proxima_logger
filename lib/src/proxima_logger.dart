@@ -1,70 +1,86 @@
-import 'support/output_event.dart';
-
-import 'log_decorator/log_decorator.dart';
-import 'log_formatter/log_formatter.dart';
-import 'support/log_event.dart';
-
-import 'support/log_settings.dart';
-import 'support/log_type.dart';
-import 'support/log_output.dart';
-export 'support/log_type.dart';
+import 'proxima_logger_base.dart';
 
 /// Use instances of ProximaLogger to print log messages.
-class ProximaLogger {
+class ProximaLogger extends ProximaLoggerBase {
   ProximaLogger({
-    SettingsBuilder? settings,
-    ILogFormatter? formatter,
-    ILogDecorator? decorator,
-    LogOutput? output,
-  }) {
-    final settingsBuilder = settings ?? (_) => LogSettings();
+    super.settings,
+    super.formatter,
+    super.decorator,
+    super.output,
+  });
 
-    _formatter = formatter ?? LogFormatter(settingsBuilder);
-    _decorator = decorator ?? LogDecorator(settingsBuilder);
-    _output = output ?? ConsoleOutput();
-  }
-
-  late final ILogFormatter _formatter;
-  late final ILogDecorator _decorator;
-  late final LogOutput _output;
-
-  /// Prints a log message.
-  void log(
-    ILogType type, {
+  /// Print [LogType.info] log messages.
+  void info({
     String? title,
     dynamic error,
     StackTrace? stack,
     dynamic message,
-  }) {
-    final logEvent = LogEvent(
-      type,
-      title: title,
-      error: error,
-      stack: stack,
-      message: message,
-      time: DateTime.now(),
-    );
-
-    logFromEvent(logEvent);
-  }
-
-  void logFromEvent(LogEvent logEvent) {
-    try {
-      final formattedLogEvent = _formatter.format(logEvent);
-
-      final lines = _decorator.decorate(formattedLogEvent);
-
-      final outputEvent = OutputEvent(
-        type: logEvent.type,
-        logEvent: logEvent,
-        formattedLogEvent: formattedLogEvent,
-        lines: lines,
+  }) =>
+      log(
+        LogType.info,
+        title: title,
+        error: error,
+        stack: stack,
+        message: message,
       );
 
-      _output.output(outputEvent);
-    } catch (e, s) {
-      print(e);
-      print(s);
-    }
-  }
+  /// Print [LogType.debug] log messages.
+  void debug({
+    String? title,
+    dynamic error,
+    StackTrace? stack,
+    dynamic message,
+  }) =>
+      log(
+        LogType.debug,
+        title: title,
+        error: error,
+        stack: stack,
+        message: message,
+      );
+
+  /// Print [LogType.warning] log messages.
+  void warning({
+    String? title,
+    dynamic error,
+    StackTrace? stack,
+    dynamic message,
+  }) =>
+      log(
+        LogType.warning,
+        title: title,
+        error: error,
+        stack: stack,
+        message: message,
+      );
+
+  /// Print [LogType.error] log messages.
+  void error({
+    String? title,
+    dynamic error,
+    StackTrace? stack,
+    dynamic message,
+  }) =>
+      log(
+        LogType.error,
+        title: title,
+        error: error,
+        stack: stack,
+        message: message,
+      );
+
+  /// Print [LogType.wtf] log messages.
+  void wtf({
+    String? title,
+    dynamic error,
+    StackTrace? stack,
+    dynamic message,
+  }) =>
+      log(
+        LogType.wtf,
+        title: title,
+        error: error,
+        stack: stack,
+        message: message,
+      );
 }
