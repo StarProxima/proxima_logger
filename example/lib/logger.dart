@@ -1,44 +1,45 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:dio/dio.dart';
 import 'package:proxima_logger/proxima_logger.dart';
 
 final logger = MyLogger(
-  settings: const LogSettings(
-    logParts: [
-      LogPart.stack,
-      LogPart.error,
-      LogPart.time,
-      LogPart.divider,
-      LogPart.message,
-    ],
-    printEmoji: true,
-    printTitle: true,
-    printLogTypeLabel: true,
-  ),
-  typeSettings: {
-    Log.debug: const LogSettings(
-      logParts: [
-        LogPart.stack,
-        LogPart.time,
-        LogPart.message,
-      ],
-      logDecorations: LogDecorations.rounded(),
-    ),
-    Log.warning: const LogSettings(
-      logDecorations: LogDecorations.rounded(),
-    ),
-    Log.error: const LogSettings(
-      logDecorations: LogDecorations.thick(),
-    ),
-    Log.wtf: const LogSettings(
-      logDecorations: LogDecorations.thin(),
-    ),
+  settings: (logType) => switch (logType) {
+    Log.debug => const LogSettings(
+        logParts: [
+          LogPart.stack,
+          LogPart.time,
+          LogPart.message,
+        ],
+        logDecorations: LogDecorations.rounded(),
+      ),
+    Log.warning => const LogSettings(
+        logDecorations: LogDecorations.rounded(),
+      ),
+    Log.error => const LogSettings(
+        logDecorations: LogDecorations.thick(),
+      ),
+    Log.wtf || Log.nothing => const LogSettings(
+        logDecorations: LogDecorations.thin(),
+      ),
+    _ => const LogSettings(
+        logParts: [
+          LogPart.stack,
+          LogPart.error,
+          LogPart.time,
+          LogPart.divider,
+          LogPart.message,
+        ],
+        printEmoji: true,
+        printTitle: true,
+        printLogTypeLabel: true,
+      ),
   },
 );
 
-class MyLogger extends ProximaLogger {
+class MyLogger extends ProximaLoggerBase {
   MyLogger({
     super.settings,
-    super.typeSettings,
     super.formatter,
     super.decorator,
     super.output,
@@ -62,7 +63,7 @@ class MyLogger extends ProximaLogger {
   }
 }
 
-enum Log implements LogType {
+enum Log implements ILogType {
   info(
     label: 'info',
     emoji: '💡',
@@ -104,6 +105,14 @@ enum Log implements LogType {
     ansiPen: AnsiPen.none(),
   );
 
+  const Log({
+    required this.label,
+    required this.emoji,
+    required this.ansiPen,
+    // ignore: unused_element
+    this.ansiPenOnBackground = const AnsiPen.black(),
+  });
+
   @override
   final String label;
   @override
@@ -112,12 +121,4 @@ enum Log implements LogType {
   final AnsiPen ansiPen;
   @override
   final AnsiPen ansiPenOnBackground;
-
-  const Log({
-    required this.label,
-    required this.emoji,
-    required this.ansiPen,
-    // ignore: unused_element
-    this.ansiPenOnBackground = const AnsiPen.black(),
-  });
 }

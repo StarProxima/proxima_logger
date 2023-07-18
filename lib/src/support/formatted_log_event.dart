@@ -3,7 +3,7 @@ import 'log_settings.dart';
 import 'log_type.dart';
 
 class FormattedLogEvent {
-  LogType log;
+  ILogType log;
   List<LogPart> queue;
   String? title;
   String? error;

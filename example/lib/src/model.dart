@@ -4,51 +4,64 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+@immutable
 class Task implements Comparable {
-  late final String id;
+  final String id;
   final String text;
   final Importance importance;
   final bool done;
   final DateTime? deadline;
   final Color? color;
-  late final DateTime createdAt;
-  late final DateTime changedAt;
-  late final String lastUpdatedBy;
+  final DateTime createdAt;
+  final DateTime changedAt;
+  final String lastUpdatedBy;
   static int _count = 0;
 
-  Task({
+  const Task({
     required this.id,
     required this.text,
     required this.importance,
-    this.deadline,
     required this.done,
-    this.color,
     required this.createdAt,
     required this.changedAt,
     required this.lastUpdatedBy,
-  });
-
-  Task.create({
-    this.text = '',
-    this.importance = Importance.basic,
-    this.done = false,
     this.deadline,
     this.color,
+  });
+
+  factory Task.create({
+    String text = '',
+    Importance importance = Importance.basic,
+    bool done = false,
+    DateTime? deadline,
+    Color? color,
   }) {
-    var now = DateTime.now();
-    id = '${now.millisecondsSinceEpoch}${_count++}';
-    createdAt = now;
-    changedAt = now;
-    lastUpdatedBy = 'Pacman';
+    final now = DateTime.now();
+    final id = '${now.millisecondsSinceEpoch}${_count++}';
+    final createdAt = now;
+    final changedAt = now;
+    const lastUpdatedBy = 'Pacman';
+
+    return Task(
+      id: id,
+      text: text,
+      importance: importance,
+      done: done,
+      deadline: deadline,
+      color: color,
+      createdAt: createdAt,
+      changedAt: changedAt,
+      lastUpdatedBy: lastUpdatedBy,
+    );
   }
 
   factory Task.random() {
-    var random = Random();
+    final random = Random();
 
-    String tasks =
+    const tasks =
         'Сходить на 10 спектаклей. Организовать семейный ужин. Стать донором крови. Провести месяц без алкоголя. Сходить в поход. Вести учет расходов. Запустить свой проект. Сходить в 10 новых музеев. Простить обиду близкому человеку. Провести отпуск с компанией друзей. Попробовать 5 новых видов спорта. Сходить на концерт любимой группы. Открыть накопительный счет. Пройти курс повышения квалификации. Прочитать 40 книг. Устроить совместную велопрогулку по городу на несколько часов с насыщенной программой. Сходить в баню с друзьями. Начать медитировать. Совершить автопутешествие. Накопить на путешествие мечты. Научиться делегировать задачи. Нарисовать картину. Сходить в театр всей семьей. Собрать друзей на домашний ужин. Принимать контрастный душ. Провести Новый год в экзотическом месте. Начать зарабатывать на своем проекте. Инициировать новый проект на работе. Взять уроки танца. Возродить семейную традицию. Сделать другу/подруге неожиданный подарок. Пройти курсы первой помощи. Прыгнуть с парашютом. Закрыть кредиты. Найти себе ментора. Избавиться от лишних вещей. Устроить семейную фотосессию. Стать волонтером. Подводить итоги недели. Подарить себе ЗРА - программу. Научиться инвестировать. Уходить с работы вовремя. Все законы унифицировать в рамках юридической системы мировых судов, использующих один и тот же кодекс законов, за исполнением которого будет следить полиция Единого Мирового Правительства, а объединённые вооружённые силы Единого Мира насильно внедрят законы во все бывшие страны, которые больше не будут разделяться границами. Сделать так, чтобы система была основана на базе благоденствующего государства; кто покорился и служит Единому Мировому Правительству, будет вознаграждён средствами к жизни; кто взбунтуется, будет просто заморен голодом или объявлен вне закона, став мишенью для каждого, кто захочет убить его. Сатанизм, люциферианство и чёрная магия признать законными предметами обучения с запрещением частных или церковных школ. Все христианские церкви разрушить, а само христианство при Едином Мировом Правительстве отодвинуть в прошлое. Сделать так, чтобы сельское хозяйство было исключительно в руках Комитета 300, а производство продуктов питания строго контролировалось. Квалифицированные рабочие переместить в другие города, если город, где они живут, окажется перенаселённым. Неквалифицированные рабочих отобрать наугад и послать в неполностью заселённые города, чтобы заполнить их «квоты». Сделать так, чтобы все информационные службы и средства печати находились под контролем Мирового Правительства. Под видом «развлечений» устраивать регулярные промывания мозгов, что уже практикуется в XXX, где это стало искусством. Сделать так, чтобы после уничтожения таких отраслей промышленности, как строительная, автомобильная, металлургическая, тяжёлое машиностроение, жилищное строительство будет ограничено, а сохранённые отрасли промышленности будут находиться под контролем натовского «Римского клуба», а также все научные и космические исследования, которые будут ограничены и всецело подчинены Комитету 300. Уничтожить космическое оружие бывших стран вместе с ядерным оружием.';
 
-    List<String> taskTextList = tasks.split('.');
+    final taskTextList = tasks.split('.');
 
     return Task.create(
       text: taskTextList[random.nextInt(taskTextList.length)].trim(),
@@ -181,19 +194,14 @@ class Task implements Comparable {
   }
 
   @override
-  int compareTo(other) {
-    if (other is Task) {
-      return text.compareTo(other.text);
-    }
-    return 0;
+  int compareTo(covariant Task other) {
+    return text.compareTo(other.text);
   }
 }
 
 enum Importance {
   low,
-
   basic,
-
   important,
 }
 

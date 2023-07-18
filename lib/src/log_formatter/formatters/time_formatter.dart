@@ -1,27 +1,26 @@
 import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
-/// A [LogTimeFormatter] formats a [DateTime] to a [String].
-abstract class LogTimeFormatter {
-  String getLogTime(DateTime time, LogType log);
-
-  /// Default implementation of [LogTimeFormatter].
-  factory LogTimeFormatter(LogTypeSettings settings,
-          {required DateTime startAppTime}) =>
-      DefaultLogTimeFormatter(settings, startAppTime: startAppTime);
+/// A [ILogTimeFormatter] formats a [DateTime] to a [String].
+abstract class ILogTimeFormatter {
+  String getLogTime(DateTime time, ILogType log);
 }
 
-class DefaultLogTimeFormatter implements LogTimeFormatter {
-  final LogTypeSettings settings;
+/// Default implementation of [LogTimeFormatter].
+class LogTimeFormatter implements ILogTimeFormatter {
+  LogTimeFormatter(
+    this.settings, {
+    required this.startAppTime,
+  });
+
+  final SettingsBuilder settings;
   final DateTime startAppTime;
 
-  DefaultLogTimeFormatter(this.settings, {required this.startAppTime});
-
   static String _fourDigits(int n) {
-    if (n >= 1000) return "$n";
-    if (n >= 100) return "0$n";
-    if (n >= 10) return "00$n";
-    return "000$n";
+    if (n >= 1000) return '$n';
+    if (n >= 100) return '0$n';
+    if (n >= 10) return '00$n';
+    return '000$n';
   }
 
   static String _threeDigits(int n) {
@@ -35,24 +34,25 @@ class DefaultLogTimeFormatter implements LogTimeFormatter {
     return '0$n';
   }
 
-  String getLogTime(DateTime time, LogType log) {
-    DateTime now = DateTime.now();
+  @override
+  String getLogTime(DateTime time, ILogType log) {
+    final now = DateTime.now();
 
-    String date = '';
-    if (settings[log].printDateInTime) {
-      String y = _fourDigits(now.year);
-      String m = _twoDigits(now.month);
-      String d = _twoDigits(now.day);
+    var date = '';
+    if (settings(log).printDateInTime) {
+      final y = _fourDigits(now.year);
+      final m = _twoDigits(now.month);
+      final d = _twoDigits(now.day);
       date = '$d.$m.$y';
     }
 
-    String h = _twoDigits(now.hour);
-    String min = _twoDigits(now.minute);
-    String sec = _twoDigits(now.second);
-    String ms = _threeDigits(now.millisecond);
+    final h = _twoDigits(now.hour);
+    final min = _twoDigits(now.minute);
+    final sec = _twoDigits(now.second);
+    final ms = _threeDigits(now.millisecond);
 
-    String timeSinceStart = '';
-    if (settings[log].printTimeSinceStartInTime) {
+    var timeSinceStart = '';
+    if (settings(log).printTimeSinceStartInTime) {
       timeSinceStart = '(+${now.difference(startAppTime).toString()})';
     }
 

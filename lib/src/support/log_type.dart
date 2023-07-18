@@ -1,22 +1,22 @@
 import 'ansi_pen.dart';
 
-/// LogType is an interface for log types.
-abstract class LogType {
-  final String label;
-  final String emoji;
-  final AnsiPen ansiPen;
-  final AnsiPen ansiPenOnBackground;
-
-  LogType({
+/// ILogType is an interface for log types.
+abstract class ILogType {
+  ILogType({
     required this.label,
     required this.emoji,
     required this.ansiPen,
     required this.ansiPenOnBackground,
   });
+
+  final String label;
+  final String emoji;
+  final AnsiPen ansiPen;
+  final AnsiPen ansiPenOnBackground;
 }
 
-/// Default implementation of LogType.
-enum Log implements LogType {
+/// Default implementation of ILogType.
+enum LogType implements ILogType {
   info(
     label: 'info',
     emoji: '💡',
@@ -58,6 +58,14 @@ enum Log implements LogType {
     ansiPen: AnsiPen.none(),
   );
 
+  const LogType({
+    required this.label,
+    required this.emoji,
+    required this.ansiPen,
+    // ignore: unused_element
+    this.ansiPenOnBackground = const AnsiPen.black(),
+  });
+
   @override
   final String label;
   @override
@@ -66,12 +74,4 @@ enum Log implements LogType {
   final AnsiPen ansiPen;
   @override
   final AnsiPen ansiPenOnBackground;
-
-  const Log({
-    required this.label,
-    required this.emoji,
-    required this.ansiPen,
-    // ignore: unused_element
-    this.ansiPenOnBackground = const AnsiPen.black(),
-  });
 }

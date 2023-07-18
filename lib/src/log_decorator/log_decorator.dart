@@ -1,42 +1,35 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
-import '../support/ansi_pen.dart';
-import '../support/log_decorations.dart';
 import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
 
-/// Interface for [LogDecorator].
-abstract class LogDecorator {
+/// Interface for [ILogDecorator].
+abstract class ILogDecorator {
   List<String> decorate(FormattedLogEvent event);
-
-  /// Default implementation of [LogDecorator]. Decorates logs with borders, emojis and colors.
-  factory LogDecorator(LogTypeSettings settings) =>
-      DefaultLogDecorator(settings);
 }
 
-class DefaultLogDecorator implements LogDecorator {
-  LogTypeSettings settings;
+/// Default implementation of [ILogDecorator]. Decorates logs with borders, emojis and colors.
+class LogDecorator implements ILogDecorator {
+  LogDecorator(this.settings);
 
-  DefaultLogDecorator(
-    this.settings,
-  );
+  SettingsBuilder settings;
 
   String _getTitle(FormattedLogEvent event) {
-    LogSettings st = settings[event.log];
-    LogDecorations ld = settings[event.log].logDecorations;
+    final st = settings(event.log);
+    final ld = settings(event.log).logDecorations;
 
-    String topLeftTitleCorner =
+    final topLeftTitleCorner =
         st.leftBorder ? '${ld.topLeftCorner}${ld.middleTopCorner} ' : '';
 
-    String emoji = st.printEmoji ? event.log.emoji : '';
+    final emoji = st.printEmoji ? event.log.emoji : '';
 
-    String logTypeLabel = st.printLogTypeLabel
+    final logTypeLabel = st.printLogTypeLabel
         ? st.decorateLogTypeLabel
             ? '[${event.log.label.toUpperCase()}]'
             : event.log.label
         : '';
 
-    String titleStr = st.printTitle
+    final titleStr = st.printTitle
         ? event.title != null
             ? ' ${event.title}'
             : ''
@@ -45,30 +38,29 @@ class DefaultLogDecorator implements LogDecorator {
     return '$topLeftTitleCorner$emoji$logTypeLabel$titleStr';
   }
 
+  @override
   List<String> decorate(FormattedLogEvent event) {
-    LogSettings set = settings[event.log];
-    LogDecorations dec = settings[event.log].logDecorations;
-    AnsiPen pen = event.log.ansiPen;
+    final set = settings(event.log);
+    final dec = settings(event.log).logDecorations;
+    final pen = event.log.ansiPen;
 
-    String? error = event.error;
-    String? stack = event.stack;
-    String? time = event.time;
-    String? message = event.message;
+    final error = event.error;
+    final stack = event.stack;
+    final time = event.time;
+    final message = event.message;
 
-    List<String> buffer = [];
+    final buffer = <String>[pen.fg(_getTitle(event))];
 
-    buffer.add(pen.fg(_getTitle(event)));
+    final verticalLineAtLevel = set.leftBorder ? '${dec.verticalLine} ' : '';
 
-    String verticalLineAtLevel = set.leftBorder ? '${dec.verticalLine} ' : '';
-
-    String middleDivider =
+    final middleDivider =
         '${set.leftBorder ? dec.middleCorner : ''}${dec.middleDivider * set.lineLength}';
 
-    for (LogPart part in event.queue) {
+    for (final part in event.queue) {
       switch (part) {
         case LogPart.error:
           if (error != null) {
-            for (var line in error.split('\n')) {
+            for (final line in error.split('\n')) {
               buffer.add(
                 pen.fg(verticalLineAtLevel) +
                     pen.resetForeground +
@@ -86,7 +78,7 @@ class DefaultLogDecorator implements LogDecorator {
           break;
         case LogPart.stack:
           if (stack != null) {
-            for (var line in stack.split('\n')) {
+            for (final line in stack.split('\n')) {
               buffer.add(pen.fg('$verticalLineAtLevel$line'));
             }
           }
@@ -98,7 +90,7 @@ class DefaultLogDecorator implements LogDecorator {
           break;
         case LogPart.message:
           if (message != null) {
-            for (var line in message.split('\n')) {
+            for (final line in message.split('\n')) {
               buffer.add(pen.fg('$verticalLineAtLevel$line'));
             }
           }

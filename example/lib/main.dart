@@ -139,10 +139,7 @@ class _HomePageState extends State<HomePage> {
                 final response = await Dio(
                   BaseOptions(
                     baseUrl: 'https://realty.neirodev.ru/mehanik/',
-                    connectTimeout: 5000,
-                    receiveTimeout: 5000,
-                    sendTimeout: 5000,
-                    responseType: ResponseType.json,
+                    connectTimeout: const Duration(seconds: 10),
                   ),
                 ).get(
                   '/partAnnouncements',

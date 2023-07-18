@@ -1,3 +1,9 @@
+## 0.7.0
+- **BREAKING**: Change interface class code style
+- **BREAKING**: The LogSettings are now set through the SettingsBuilder instead of Map
+- Add ProximaLoggerBase
+- Dart fix and format.
+
 ## 0.6.3
 - Dart fix and format.
 

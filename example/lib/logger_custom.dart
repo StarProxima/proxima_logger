@@ -1,53 +1,51 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:proxima_logger/proxima_logger.dart';
 
-const _logTypeSettings = LogTypeSettings(
-  LogSettings(
-    logParts: [
-      LogPart.stack,
-      LogPart.error,
-      LogPart.time,
-      LogPart.divider,
-      LogPart.message,
-    ],
-    printEmoji: true,
-    printTitle: true,
-    printLogTypeLabel: true,
-  ),
-  {
-    Log.debug: LogSettings(
-      logParts: [
-        LogPart.stack,
-        LogPart.time,
-        LogPart.message,
-      ],
-      logDecorations: LogDecorations.rounded(),
-    ),
-    Log.warning: LogSettings(
-      logDecorations: LogDecorations.rounded(),
-    ),
-    Log.error: LogSettings(
-      logDecorations: LogDecorations.thick(),
-    ),
-    Log.wtf: LogSettings(
-      logDecorations: LogDecorations.thin(),
-    ),
-  },
-);
+LogSettings _settingsBuilder(ILogType logType) => switch (logType) {
+      LogType.debug => const LogSettings(
+          logParts: [
+            LogPart.stack,
+            LogPart.time,
+            LogPart.message,
+          ],
+          logDecorations: LogDecorations.rounded(),
+        ),
+      LogType.warning => const LogSettings(
+          logDecorations: LogDecorations.rounded(),
+        ),
+      LogType.error => const LogSettings(
+          logDecorations: LogDecorations.thick(),
+        ),
+      LogType.wtf || LogType.nothing => const LogSettings(
+          logDecorations: LogDecorations.thin(),
+        ),
+      _ => const LogSettings(
+          logParts: [
+            LogPart.stack,
+            LogPart.error,
+            LogPart.time,
+            LogPart.divider,
+            LogPart.message,
+          ],
+          printEmoji: true,
+          printTitle: true,
+          printLogTypeLabel: true,
+        ),
+    };
 
 final logger = ProximaLogger(
-  settings: _logTypeSettings.settings,
-  typeSettings: _logTypeSettings.typeSettings,
-  formatter: CustomFormatter(_logTypeSettings),
-  decorator: CustomDecorator(_logTypeSettings),
-  output: CustomOutput(_logTypeSettings),
+  settings: _settingsBuilder,
+  formatter: CustomFormatter(_settingsBuilder),
+  decorator: CustomDecorator(_settingsBuilder),
+  output: CustomOutput(_settingsBuilder),
 );
 
-class CustomFormatter implements LogFormatter {
-  final LogTypeSettings settings;
-
+class CustomFormatter implements ILogFormatter {
   CustomFormatter(this.settings);
+  final SettingsBuilder settings;
 
-  late final LogFormatter _formatter = DefaultLogFormatter(settings);
+  late final ILogFormatter _formatter = LogFormatter(settings);
 
   @override
   FormattedLogEvent format(LogEvent event) {
@@ -55,12 +53,11 @@ class CustomFormatter implements LogFormatter {
   }
 }
 
-class CustomDecorator implements LogDecorator {
-  final LogTypeSettings settings;
-
+class CustomDecorator implements ILogDecorator {
   CustomDecorator(this.settings);
+  final SettingsBuilder settings;
 
-  late final LogDecorator _decorator = DefaultLogDecorator(settings);
+  late final ILogDecorator _decorator = LogDecorator(settings);
 
   @override
   List<String> decorate(FormattedLogEvent event) {
@@ -69,9 +66,8 @@ class CustomDecorator implements LogDecorator {
 }
 
 class CustomOutput implements LogOutput {
-  final LogTypeSettings settings;
-
   CustomOutput(this.settings);
+  final SettingsBuilder settings;
 
   late final LogOutput _output = ConsoleOutput();
 

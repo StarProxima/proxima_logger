@@ -43,7 +43,7 @@ class LargeNestingWidget extends StatelessWidget {
 }
 
 class _NestingWidget1 extends StatefulWidget {
-  const _NestingWidget1({Key? key, required this.child}) : super(key: key);
+  const _NestingWidget1({required this.child, Key? key}) : super(key: key);
 
   final Widget child;
 

@@ -7,46 +7,38 @@ import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
 
 /// Formats a [LogEvent] into a [FormattedLogEvent]. Formats a message, stacktrace, time, and queue [LogPart].
-abstract class LogFormatter {
+abstract class ILogFormatter {
   FormattedLogEvent format(LogEvent event);
-
-  /// Default implementation of [LogFormatter].
-  factory LogFormatter(LogTypeSettings settings) =>
-      DefaultLogFormatter(settings);
 }
 
-class DefaultLogFormatter implements LogFormatter {
-  final LogTypeSettings settings;
-
-  late final QueueFormatter queueFormatter;
-  late final MessageFormatter messageFormatter;
-  late final StackTraceFormatter stackFormatter;
-  late final LogTimeFormatter timeFormatter;
-
-  DefaultLogFormatter(
+/// Default implementation of [ILogFormatter].
+class LogFormatter implements ILogFormatter {
+  LogFormatter(
     this.settings, {
-    QueueFormatter? queueFormatter,
-    MessageFormatter? messageFormatter,
-    StackTraceFormatter? stackFormatter,
-    LogTimeFormatter? logTimeFormatter,
+    IQueueFormatter? queueFormatter,
+    IMessageFormatter? messageFormatter,
+    IStackTraceFormatter? stackFormatter,
+    ILogTimeFormatter? logTimeFormatter,
   }) {
     this.queueFormatter = queueFormatter ?? QueueFormatter();
     this.messageFormatter = messageFormatter ?? MessageFormatter();
-    this.stackFormatter = stackFormatter ??
-        StackTraceFormatter(
-          settings,
-        );
-    this.timeFormatter = logTimeFormatter ??
+    this.stackFormatter = stackFormatter ?? StackTraceFormatter(settings);
+    timeFormatter = logTimeFormatter ??
         LogTimeFormatter(
           settings,
           startAppTime: DateTime.now(),
         );
   }
 
+  final SettingsBuilder settings;
+  late final IQueueFormatter queueFormatter;
+  late final IMessageFormatter messageFormatter;
+  late final IStackTraceFormatter stackFormatter;
+  late final ILogTimeFormatter timeFormatter;
+
   @override
   FormattedLogEvent format(LogEvent event) {
-    List<LogPart> queue =
-        queueFormatter.format(event, settings[event.type].logParts);
+    final queue = queueFormatter.format(event, settings(event.type).logParts);
 
     String? error;
 
@@ -58,14 +50,14 @@ class DefaultLogFormatter implements LogFormatter {
 
     if (queue.contains(LogPart.stack)) {
       if (event.stack == null) {
-        if (settings[event.type].stackTraceMethodCount > 0) {
+        if (settings(event.type).stackTraceMethodCount > 0) {
           stack = stackFormatter.format(
             event.type,
             StackTrace.current,
             isError: false,
           );
         }
-      } else if (settings[event.type].errorStackTraceMethodCount > 0) {
+      } else if (settings(event.type).errorStackTraceMethodCount > 0) {
         stack = stackFormatter.format(
           event.type,
           event.stack,
@@ -86,7 +78,7 @@ class DefaultLogFormatter implements LogFormatter {
       message = messageFormatter.format(event.message);
     }
 
-    FormattedLogEvent formattedLogEvent = FormattedLogEvent(
+    final formattedLogEvent = FormattedLogEvent(
       log: event.type,
       queue: queue,
       title: event.title,

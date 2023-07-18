@@ -1,19 +1,16 @@
 import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
-/// A [StackTraceFormatter] formats a [StackTrace].
-abstract class StackTraceFormatter {
-  String? format(LogType log, StackTrace? stackTrace, {required bool isError});
-
-  /// Default implementation of [StackTraceFormatter]. Removes unnecessary lines in the [StackTrace].
-  factory StackTraceFormatter(LogTypeSettings settings) =>
-      DefaultStackTraceFormatter(settings);
+/// A [IStackTraceFormatter] formats a [StackTrace].
+abstract class IStackTraceFormatter {
+  String? format(ILogType log, StackTrace? stackTrace, {required bool isError});
 }
 
-class DefaultStackTraceFormatter implements StackTraceFormatter {
-  const DefaultStackTraceFormatter(this.settings);
+/// Default implementation of [StackTraceFormatter]. Removes unnecessary lines in the [StackTrace].
+class StackTraceFormatter implements IStackTraceFormatter {
+  const StackTraceFormatter(this.settings);
 
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   static final _deviceStackTraceRegex =
@@ -28,7 +25,7 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
       RegExp(r'^(?:package:)?(dart:[^\s]+|[^\s]+)');
 
   static bool _discardDeviceStacktraceLine(String line) {
-    var match = _deviceStackTraceRegex.matchAsPrefix(line);
+    final match = _deviceStackTraceRegex.matchAsPrefix(line);
     if (match == null) {
       return false;
     }
@@ -37,7 +34,7 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
   }
 
   static bool _discardWebStacktraceLine(String line) {
-    var match = _webStackTraceRegex.matchAsPrefix(line);
+    final match = _webStackTraceRegex.matchAsPrefix(line);
     if (match == null) {
       return false;
     }
@@ -47,7 +44,7 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
   }
 
   static bool _discardBrowserStacktraceLine(String line) {
-    var match = _browserStackTraceRegex.matchAsPrefix(line);
+    final match = _browserStackTraceRegex.matchAsPrefix(line);
     if (match == null) {
       return false;
     }
@@ -56,32 +53,45 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
         match.group(1)!.startsWith('dart:');
   }
 
-  String? format(LogType log, StackTrace? stackTrace, {required bool isError}) {
-    List<String> lines = stackTrace.toString().split('\n');
+  @override
+  String? format(
+    ILogType log,
+    StackTrace? stackTrace, {
+    required bool isError,
+  }) {
+    var lines = stackTrace.toString().split('\n');
     if (!isError &&
-        settings[log].stackTraceBeginIndex > 0 &&
-        settings[log].stackTraceBeginIndex < lines.length - 1) {
-      lines = lines.sublist(settings[log].stackTraceBeginIndex);
+        settings(log).stackTraceBeginIndex > 0 &&
+        settings(log).stackTraceBeginIndex < lines.length - 1) {
+      lines = lines.sublist(settings(log).stackTraceBeginIndex);
     }
-    List<String> formatted = [];
-    int count = 0;
-    for (var line in lines) {
+    final formatted = <String>[];
+    var count = 0;
+    for (final line in lines) {
       if (_discardDeviceStacktraceLine(line) ||
           _discardWebStacktraceLine(line) ||
           _discardBrowserStacktraceLine(line) ||
           line.isEmpty) {
         continue;
       }
+
+      final formatedLine = line
+          .replaceFirst(
+            settings(log).removeAsynchronousSuspensionFromStackTrace
+                ? RegExp(r'#\d+\s+|<asynchronous suspension>')
+                : RegExp(r'#\d+\s+'),
+            '',
+          )
+          .replaceAll('.<anonymous closure>', '()');
+
       formatted.add(
-          '#$count   ${line.replaceFirst(RegExp(r'#\d+\s+'), '').replaceAll('.<anonymous closure>', '()')}');
+        '#$count   $formatedLine',
+      );
+
       if (isError) {
-        if (++count >= settings[log].errorStackTraceMethodCount) {
-          break;
-        }
+        if (++count >= settings(log).errorStackTraceMethodCount) break;
       } else {
-        if (++count >= settings[log].stackTraceMethodCount) {
-          break;
-        }
+        if (++count >= settings(log).stackTraceMethodCount) break;
       }
     }
 
