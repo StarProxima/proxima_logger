@@ -4,10 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test('Test formatting of log event with default settings', () {
     var formatter = LogFormatter(
-      LogTypeSettings(
-        LogSettings(),
-        {},
-      ),
+      (_) => LogSettings(),
     );
     var logEvent = LogEvent(LogType.warning,
         title: 'Test log event', time: DateTime.now());
@@ -37,7 +34,7 @@ void main() {
       printEmoji: false,
     );
 
-    var formatter = LogFormatter(LogTypeSettings(settings, {}));
+    var formatter = LogFormatter((_) => settings);
     var logEvent = LogEvent(
       LogType.warning,
       title: 'Test log event',

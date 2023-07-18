@@ -8,7 +8,7 @@ abstract class ILogTimeFormatter {
 
 /// Default implementation of [LogTimeFormatter].
 class LogTimeFormatter implements ILogTimeFormatter {
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
   final DateTime startAppTime;
 
   LogTimeFormatter(this.settings, {required this.startAppTime});
@@ -35,7 +35,7 @@ class LogTimeFormatter implements ILogTimeFormatter {
     DateTime now = DateTime.now();
 
     String date = '';
-    if (settings[log].printDateInTime) {
+    if (settings(log).printDateInTime) {
       String y = _fourDigits(now.year);
       String m = _twoDigits(now.month);
       String d = _twoDigits(now.day);
@@ -48,7 +48,7 @@ class LogTimeFormatter implements ILogTimeFormatter {
     String ms = _threeDigits(now.millisecond);
 
     String timeSinceStart = '';
-    if (settings[log].printTimeSinceStartInTime) {
+    if (settings(log).printTimeSinceStartInTime) {
       timeSinceStart = '(+${now.difference(startAppTime).toString()})';
     }
 

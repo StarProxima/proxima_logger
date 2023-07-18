@@ -2,43 +2,42 @@ import 'package:dio/dio.dart';
 import 'package:proxima_logger/proxima_logger.dart';
 
 final logger = MyLogger(
-  settings: const LogSettings(
-    logParts: [
-      LogPart.stack,
-      LogPart.error,
-      LogPart.time,
-      LogPart.divider,
-      LogPart.message,
-    ],
-    printEmoji: true,
-    printTitle: true,
-    printLogTypeLabel: true,
-  ),
-  typeSettings: {
-    Log.debug: const LogSettings(
-      logParts: [
-        LogPart.stack,
-        LogPart.time,
-        LogPart.message,
-      ],
-      logDecorations: LogDecorations.rounded(),
-    ),
-    Log.warning: const LogSettings(
-      logDecorations: LogDecorations.rounded(),
-    ),
-    Log.error: const LogSettings(
-      logDecorations: LogDecorations.thick(),
-    ),
-    Log.wtf: const LogSettings(
-      logDecorations: LogDecorations.thin(),
-    ),
+  settings: (logType) => switch (logType) {
+    Log.debug => const LogSettings(
+        logParts: [
+          LogPart.stack,
+          LogPart.time,
+          LogPart.message,
+        ],
+        logDecorations: LogDecorations.rounded(),
+      ),
+    Log.warning => const LogSettings(
+        logDecorations: LogDecorations.rounded(),
+      ),
+    Log.error => const LogSettings(
+        logDecorations: LogDecorations.thick(),
+      ),
+    Log.wtf || Log.nothing => const LogSettings(
+        logDecorations: LogDecorations.thin(),
+      ),
+    _ => const LogSettings(
+        logParts: [
+          LogPart.stack,
+          LogPart.error,
+          LogPart.time,
+          LogPart.divider,
+          LogPart.message,
+        ],
+        printEmoji: true,
+        printTitle: true,
+        printLogTypeLabel: true,
+      ),
   },
 );
 
 class MyLogger extends ProximaLogger {
   MyLogger({
     super.settings,
-    super.typeSettings,
     super.formatter,
     super.decorator,
     super.output,

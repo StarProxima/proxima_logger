@@ -12,13 +12,13 @@ abstract class ILogDecorator {
 
 /// Default implementation of [ILogDecorator]. Decorates logs with borders, emojis and colors.
 class LogDecorator implements ILogDecorator {
-  LogTypeSettings settings;
+  SettingsBuilder settings;
 
   LogDecorator(this.settings);
 
   String _getTitle(FormattedLogEvent event) {
-    LogSettings st = settings[event.log];
-    LogDecorations ld = settings[event.log].logDecorations;
+    LogSettings st = settings(event.log);
+    LogDecorations ld = settings(event.log).logDecorations;
 
     String topLeftTitleCorner =
         st.leftBorder ? '${ld.topLeftCorner}${ld.middleTopCorner} ' : '';
@@ -41,8 +41,8 @@ class LogDecorator implements ILogDecorator {
   }
 
   List<String> decorate(FormattedLogEvent event) {
-    LogSettings set = settings[event.log];
-    LogDecorations dec = settings[event.log].logDecorations;
+    LogSettings set = settings(event.log);
+    LogDecorations dec = settings(event.log).logDecorations;
     AnsiPen pen = event.log.ansiPen;
 
     String? error = event.error;

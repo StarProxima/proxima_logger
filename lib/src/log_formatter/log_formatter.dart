@@ -13,7 +13,7 @@ abstract class ILogFormatter {
 
 /// Default implementation of [ILogFormatter].
 class LogFormatter implements ILogFormatter {
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
 
   late final IQueueFormatter queueFormatter;
   late final IMessageFormatter messageFormatter;
@@ -43,7 +43,7 @@ class LogFormatter implements ILogFormatter {
   @override
   FormattedLogEvent format(LogEvent event) {
     List<LogPart> queue =
-        queueFormatter.format(event, settings[event.type].logParts);
+        queueFormatter.format(event, settings(event.type).logParts);
 
     String? error;
 
@@ -55,14 +55,14 @@ class LogFormatter implements ILogFormatter {
 
     if (queue.contains(LogPart.stack)) {
       if (event.stack == null) {
-        if (settings[event.type].stackTraceMethodCount > 0) {
+        if (settings(event.type).stackTraceMethodCount > 0) {
           stack = stackFormatter.format(
             event.type,
             StackTrace.current,
             isError: false,
           );
         }
-      } else if (settings[event.type].errorStackTraceMethodCount > 0) {
+      } else if (settings(event.type).errorStackTraceMethodCount > 0) {
         stack = stackFormatter.format(
           event.type,
           event.stack,

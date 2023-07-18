@@ -10,7 +10,7 @@ abstract class IStackTraceFormatter {
 class StackTraceFormatter implements IStackTraceFormatter {
   const StackTraceFormatter(this.settings);
 
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
 
   /// Matches a stacktrace line as generated on Android/iOS devices.
   static final _deviceStackTraceRegex =
@@ -57,9 +57,9 @@ class StackTraceFormatter implements IStackTraceFormatter {
       {required bool isError}) {
     List<String> lines = stackTrace.toString().split('\n');
     if (!isError &&
-        settings[log].stackTraceBeginIndex > 0 &&
-        settings[log].stackTraceBeginIndex < lines.length - 1) {
-      lines = lines.sublist(settings[log].stackTraceBeginIndex);
+        settings(log).stackTraceBeginIndex > 0 &&
+        settings(log).stackTraceBeginIndex < lines.length - 1) {
+      lines = lines.sublist(settings(log).stackTraceBeginIndex);
     }
     List<String> formatted = [];
     int count = 0;
@@ -73,11 +73,11 @@ class StackTraceFormatter implements IStackTraceFormatter {
       formatted.add(
           '#$count   ${line.replaceFirst(RegExp(r'#\d+\s+'), '').replaceAll('.<anonymous closure>', '()')}');
       if (isError) {
-        if (++count >= settings[log].errorStackTraceMethodCount) {
+        if (++count >= settings(log).errorStackTraceMethodCount) {
           break;
         }
       } else {
-        if (++count >= settings[log].stackTraceMethodCount) {
+        if (++count >= settings(log).stackTraceMethodCount) {
           break;
         }
       }

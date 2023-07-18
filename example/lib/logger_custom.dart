@@ -1,49 +1,46 @@
 import 'package:proxima_logger/proxima_logger.dart';
 
-const _logTypeSettings = LogTypeSettings(
-  LogSettings(
-    logParts: [
-      LogPart.stack,
-      LogPart.error,
-      LogPart.time,
-      LogPart.divider,
-      LogPart.message,
-    ],
-    printEmoji: true,
-    printTitle: true,
-    printLogTypeLabel: true,
-  ),
-  {
-    LogType.debug: LogSettings(
-      logParts: [
-        LogPart.stack,
-        LogPart.time,
-        LogPart.message,
-      ],
-      logDecorations: LogDecorations.rounded(),
-    ),
-    LogType.warning: LogSettings(
-      logDecorations: LogDecorations.rounded(),
-    ),
-    LogType.error: LogSettings(
-      logDecorations: LogDecorations.thick(),
-    ),
-    LogType.wtf: LogSettings(
-      logDecorations: LogDecorations.thin(),
-    ),
-  },
-);
+LogSettings _settingsBuilder(ILogType logType) => switch (logType) {
+      LogType.debug => const LogSettings(
+          logParts: [
+            LogPart.stack,
+            LogPart.time,
+            LogPart.message,
+          ],
+          logDecorations: LogDecorations.rounded(),
+        ),
+      LogType.warning => const LogSettings(
+          logDecorations: LogDecorations.rounded(),
+        ),
+      LogType.error => const LogSettings(
+          logDecorations: LogDecorations.thick(),
+        ),
+      LogType.wtf || LogType.nothing => const LogSettings(
+          logDecorations: LogDecorations.thin(),
+        ),
+      _ => const LogSettings(
+          logParts: [
+            LogPart.stack,
+            LogPart.error,
+            LogPart.time,
+            LogPart.divider,
+            LogPart.message,
+          ],
+          printEmoji: true,
+          printTitle: true,
+          printLogTypeLabel: true,
+        ),
+    };
 
 final logger = ProximaLogger(
-  settings: _logTypeSettings.settings,
-  typeSettings: _logTypeSettings.typeSettings,
-  formatter: CustomFormatter(_logTypeSettings),
-  decorator: CustomDecorator(_logTypeSettings),
-  output: CustomOutput(_logTypeSettings),
+  settings: _settingsBuilder,
+  formatter: CustomFormatter(_settingsBuilder),
+  decorator: CustomDecorator(_settingsBuilder),
+  output: CustomOutput(_settingsBuilder),
 );
 
 class CustomFormatter implements ILogFormatter {
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
 
   CustomFormatter(this.settings);
 
@@ -56,7 +53,7 @@ class CustomFormatter implements ILogFormatter {
 }
 
 class CustomDecorator implements ILogDecorator {
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
 
   CustomDecorator(this.settings);
 
@@ -69,7 +66,7 @@ class CustomDecorator implements ILogDecorator {
 }
 
 class CustomOutput implements LogOutput {
-  final LogTypeSettings settings;
+  final SettingsBuilder settings;
 
   CustomOutput(this.settings);
 

@@ -11,16 +11,8 @@ enum LogPart {
   divider,
 }
 
-class LogTypeSettings {
-  final LogSettings settings;
-  final Map<ILogType, LogSettings> typeSettings;
-
-  const LogTypeSettings(this.settings, this.typeSettings);
-
-  LogSettings operator [](ILogType key) {
-    return typeSettings[key] ?? settings;
-  }
-}
+/// A function that returns the settings for the logger.
+typedef SettingsBuilder = LogSettings Function(ILogType logType);
 
 /// Settings for the logger.
 class LogSettings {
