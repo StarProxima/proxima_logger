@@ -1,17 +1,14 @@
 import '../../support/log_settings.dart';
 import '../../support/log_type.dart';
 
-/// A [StackTraceFormatter] formats a [StackTrace].
-abstract class StackTraceFormatter {
-  String? format(LogType log, StackTrace? stackTrace, {required bool isError});
-
-  /// Default implementation of [StackTraceFormatter]. Removes unnecessary lines in the [StackTrace].
-  factory StackTraceFormatter(LogTypeSettings settings) =>
-      DefaultStackTraceFormatter(settings);
+/// A [IStackTraceFormatter] formats a [StackTrace].
+abstract class IStackTraceFormatter {
+  String? format(ILogType log, StackTrace? stackTrace, {required bool isError});
 }
 
-class DefaultStackTraceFormatter implements StackTraceFormatter {
-  const DefaultStackTraceFormatter(this.settings);
+/// Default implementation of [StackTraceFormatter]. Removes unnecessary lines in the [StackTrace].
+class StackTraceFormatter implements IStackTraceFormatter {
+  const StackTraceFormatter(this.settings);
 
   final LogTypeSettings settings;
 
@@ -56,7 +53,8 @@ class DefaultStackTraceFormatter implements StackTraceFormatter {
         match.group(1)!.startsWith('dart:');
   }
 
-  String? format(LogType log, StackTrace? stackTrace, {required bool isError}) {
+  String? format(ILogType log, StackTrace? stackTrace,
+      {required bool isError}) {
     List<String> lines = stackTrace.toString().split('\n');
     if (!isError &&
         settings[log].stackTraceBeginIndex > 0 &&

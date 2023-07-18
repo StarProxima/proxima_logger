@@ -5,21 +5,16 @@ import '../support/log_decorations.dart';
 import '../support/formatted_log_event.dart';
 import '../support/log_settings.dart';
 
-/// Interface for [LogDecorator].
-abstract class LogDecorator {
+/// Interface for [ILogDecorator].
+abstract class ILogDecorator {
   List<String> decorate(FormattedLogEvent event);
-
-  /// Default implementation of [LogDecorator]. Decorates logs with borders, emojis and colors.
-  factory LogDecorator(LogTypeSettings settings) =>
-      DefaultLogDecorator(settings);
 }
 
-class DefaultLogDecorator implements LogDecorator {
+/// Default implementation of [ILogDecorator]. Decorates logs with borders, emojis and colors.
+class LogDecorator implements ILogDecorator {
   LogTypeSettings settings;
 
-  DefaultLogDecorator(
-    this.settings,
-  );
+  LogDecorator(this.settings);
 
   String _getTitle(FormattedLogEvent event) {
     LogSettings st = settings[event.log];

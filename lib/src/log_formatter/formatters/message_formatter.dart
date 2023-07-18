@@ -1,14 +1,12 @@
 import 'dart:convert';
 
-/// A [MessageFormatter] formats a dynamic message into a [String].
-abstract class MessageFormatter {
+/// A [IMessageFormatter] formats a dynamic message into a [String].
+abstract class IMessageFormatter {
   String format(dynamic message);
-
-  /// Default implementation of [MessageFormatter].
-  factory MessageFormatter() => DefaultMessageFormatter();
 }
 
-class DefaultMessageFormatter implements MessageFormatter {
+/// Default implementation of [IMessageFormatter].
+class MessageFormatter implements IMessageFormatter {
   // Handles any object that is causing JsonEncoder() problems
   Object toEncodableFallback(dynamic object) {
     return object.toString();

@@ -2,7 +2,7 @@ import 'log_type.dart';
 
 class LogEvent {
   final dynamic message;
-  final LogType type;
+  final ILogType type;
   final String? title;
   final dynamic error;
   final StackTrace? stack;

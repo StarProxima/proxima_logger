@@ -1,7 +1,7 @@
 import '../../proxima_logger.dart';
 
 class OutputEvent {
-  final LogType type;
+  final ILogType type;
   final LogEvent logEvent;
   final FormattedLogEvent formattedLogEvent;
   final List<String> lines;

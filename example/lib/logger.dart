@@ -62,7 +62,7 @@ class MyLogger extends ProximaLogger {
   }
 }
 
-enum Log implements LogType {
+enum Log implements ILogType {
   info(
     label: 'info',
     emoji: '💡',

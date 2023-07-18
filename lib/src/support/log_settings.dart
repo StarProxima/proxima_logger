@@ -13,11 +13,11 @@ enum LogPart {
 
 class LogTypeSettings {
   final LogSettings settings;
-  final Map<LogType, LogSettings> typeSettings;
+  final Map<ILogType, LogSettings> typeSettings;
 
   const LogTypeSettings(this.settings, this.typeSettings);
 
-  LogSettings operator [](LogType key) {
+  LogSettings operator [](ILogType key) {
     return typeSettings[key] ?? settings;
   }
 }

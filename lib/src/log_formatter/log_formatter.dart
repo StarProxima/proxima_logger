@@ -7,28 +7,25 @@ import 'formatters/stack_trace_formatter.dart';
 import 'formatters/time_formatter.dart';
 
 /// Formats a [LogEvent] into a [FormattedLogEvent]. Formats a message, stacktrace, time, and queue [LogPart].
-abstract class LogFormatter {
+abstract class ILogFormatter {
   FormattedLogEvent format(LogEvent event);
-
-  /// Default implementation of [LogFormatter].
-  factory LogFormatter(LogTypeSettings settings) =>
-      DefaultLogFormatter(settings);
 }
 
-class DefaultLogFormatter implements LogFormatter {
+/// Default implementation of [ILogFormatter].
+class LogFormatter implements ILogFormatter {
   final LogTypeSettings settings;
 
-  late final QueueFormatter queueFormatter;
-  late final MessageFormatter messageFormatter;
-  late final StackTraceFormatter stackFormatter;
-  late final LogTimeFormatter timeFormatter;
+  late final IQueueFormatter queueFormatter;
+  late final IMessageFormatter messageFormatter;
+  late final IStackTraceFormatter stackFormatter;
+  late final ILogTimeFormatter timeFormatter;
 
-  DefaultLogFormatter(
+  LogFormatter(
     this.settings, {
-    QueueFormatter? queueFormatter,
-    MessageFormatter? messageFormatter,
-    StackTraceFormatter? stackFormatter,
-    LogTimeFormatter? logTimeFormatter,
+    IQueueFormatter? queueFormatter,
+    IMessageFormatter? messageFormatter,
+    IStackTraceFormatter? stackFormatter,
+    ILogTimeFormatter? logTimeFormatter,
   }) {
     this.queueFormatter = queueFormatter ?? QueueFormatter();
     this.messageFormatter = messageFormatter ?? MessageFormatter();

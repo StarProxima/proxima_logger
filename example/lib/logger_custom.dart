@@ -14,7 +14,7 @@ const _logTypeSettings = LogTypeSettings(
     printLogTypeLabel: true,
   ),
   {
-    Log.debug: LogSettings(
+    LogType.debug: LogSettings(
       logParts: [
         LogPart.stack,
         LogPart.time,
@@ -22,13 +22,13 @@ const _logTypeSettings = LogTypeSettings(
       ],
       logDecorations: LogDecorations.rounded(),
     ),
-    Log.warning: LogSettings(
+    LogType.warning: LogSettings(
       logDecorations: LogDecorations.rounded(),
     ),
-    Log.error: LogSettings(
+    LogType.error: LogSettings(
       logDecorations: LogDecorations.thick(),
     ),
-    Log.wtf: LogSettings(
+    LogType.wtf: LogSettings(
       logDecorations: LogDecorations.thin(),
     ),
   },
@@ -42,12 +42,12 @@ final logger = ProximaLogger(
   output: CustomOutput(_logTypeSettings),
 );
 
-class CustomFormatter implements LogFormatter {
+class CustomFormatter implements ILogFormatter {
   final LogTypeSettings settings;
 
   CustomFormatter(this.settings);
 
-  late final LogFormatter _formatter = DefaultLogFormatter(settings);
+  late final ILogFormatter _formatter = LogFormatter(settings);
 
   @override
   FormattedLogEvent format(LogEvent event) {
@@ -55,12 +55,12 @@ class CustomFormatter implements LogFormatter {
   }
 }
 
-class CustomDecorator implements LogDecorator {
+class CustomDecorator implements ILogDecorator {
   final LogTypeSettings settings;
 
   CustomDecorator(this.settings);
 
-  late final LogDecorator _decorator = DefaultLogDecorator(settings);
+  late final ILogDecorator _decorator = LogDecorator(settings);
 
   @override
   List<String> decorate(FormattedLogEvent event) {

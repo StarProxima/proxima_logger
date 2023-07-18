@@ -9,11 +9,11 @@ void main() {
         {},
       ),
     );
-    var logEvent =
-        LogEvent(Log.warning, title: 'Test log event', time: DateTime.now());
+    var logEvent = LogEvent(LogType.warning,
+        title: 'Test log event', time: DateTime.now());
     var formattedLogEvent = formatter.format(logEvent);
 
-    expect(formattedLogEvent.log, equals(Log.warning));
+    expect(formattedLogEvent.log, equals(LogType.warning));
     expect(
         formattedLogEvent.queue,
         equals([
@@ -39,7 +39,7 @@ void main() {
 
     var formatter = LogFormatter(LogTypeSettings(settings, {}));
     var logEvent = LogEvent(
-      Log.warning,
+      LogType.warning,
       title: 'Test log event',
       message: 'Test log event message',
       time: DateTime.now(),
@@ -47,7 +47,7 @@ void main() {
 
     var formattedLogEvent = formatter.format(logEvent);
 
-    expect(formattedLogEvent.log, equals(Log.warning));
+    expect(formattedLogEvent.log, equals(LogType.warning));
     expect(
         formattedLogEvent.queue,
         equals([
