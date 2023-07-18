@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:proxima_logger/proxima_logger.dart';
 
 LogSettings _settingsBuilder(ILogType logType) => switch (logType) {
@@ -40,9 +42,8 @@ final logger = ProximaLogger(
 );
 
 class CustomFormatter implements ILogFormatter {
-  final SettingsBuilder settings;
-
   CustomFormatter(this.settings);
+  final SettingsBuilder settings;
 
   late final ILogFormatter _formatter = LogFormatter(settings);
 
@@ -53,9 +54,8 @@ class CustomFormatter implements ILogFormatter {
 }
 
 class CustomDecorator implements ILogDecorator {
-  final SettingsBuilder settings;
-
   CustomDecorator(this.settings);
+  final SettingsBuilder settings;
 
   late final ILogDecorator _decorator = LogDecorator(settings);
 
@@ -66,9 +66,8 @@ class CustomDecorator implements ILogDecorator {
 }
 
 class CustomOutput implements LogOutput {
-  final SettingsBuilder settings;
-
   CustomOutput(this.settings);
+  final SettingsBuilder settings;
 
   late final LogOutput _output = ConsoleOutput();
 

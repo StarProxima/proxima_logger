@@ -140,7 +140,6 @@ class _HomePageState extends State<HomePage> {
                   BaseOptions(
                     baseUrl: 'https://realty.neirodev.ru/mehanik/',
                     connectTimeout: const Duration(seconds: 10),
-                    responseType: ResponseType.json,
                   ),
                 ).get(
                   '/partAnnouncements',

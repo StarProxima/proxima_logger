@@ -1,10 +1,9 @@
-import 'package:proxima_logger/src/support/output_event.dart';
+import 'support/output_event.dart';
 
 import 'log_decorator/log_decorator.dart';
 import 'log_formatter/log_formatter.dart';
 import 'support/log_event.dart';
 
-import 'support/formatted_log_event.dart';
 import 'support/log_settings.dart';
 import 'support/log_type.dart';
 import 'support/log_output.dart';
@@ -12,10 +11,6 @@ export 'support/log_type.dart';
 
 /// Use instances of ProximaLogger to print log messages.
 class ProximaLogger {
-  late final ILogFormatter _formatter;
-  late final ILogDecorator _decorator;
-  late final LogOutput _output;
-
   ProximaLogger({
     SettingsBuilder? settings,
     ILogFormatter? formatter,
@@ -28,6 +23,10 @@ class ProximaLogger {
     _decorator = decorator ?? LogDecorator(settingsBuilder);
     _output = output ?? ConsoleOutput();
   }
+
+  late final ILogFormatter _formatter;
+  late final ILogDecorator _decorator;
+  late final LogOutput _output;
 
   /// Prints a log message.
   void log(
@@ -51,11 +50,11 @@ class ProximaLogger {
 
   void logFromEvent(LogEvent logEvent) {
     try {
-      FormattedLogEvent formattedLogEvent = _formatter.format(logEvent);
+      final formattedLogEvent = _formatter.format(logEvent);
 
-      List<String> lines = _decorator.decorate(formattedLogEvent);
+      final lines = _decorator.decorate(formattedLogEvent);
 
-      OutputEvent outputEvent = OutputEvent(
+      final outputEvent = OutputEvent(
         type: logEvent.type,
         logEvent: logEvent,
         formattedLogEvent: formattedLogEvent,

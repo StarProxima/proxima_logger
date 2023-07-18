@@ -8,16 +8,19 @@ abstract class ILogTimeFormatter {
 
 /// Default implementation of [LogTimeFormatter].
 class LogTimeFormatter implements ILogTimeFormatter {
+  LogTimeFormatter(
+    this.settings, {
+    required this.startAppTime,
+  });
+
   final SettingsBuilder settings;
   final DateTime startAppTime;
 
-  LogTimeFormatter(this.settings, {required this.startAppTime});
-
   static String _fourDigits(int n) {
-    if (n >= 1000) return "$n";
-    if (n >= 100) return "0$n";
-    if (n >= 10) return "00$n";
-    return "000$n";
+    if (n >= 1000) return '$n';
+    if (n >= 100) return '0$n';
+    if (n >= 10) return '00$n';
+    return '000$n';
   }
 
   static String _threeDigits(int n) {
@@ -31,23 +34,24 @@ class LogTimeFormatter implements ILogTimeFormatter {
     return '0$n';
   }
 
+  @override
   String getLogTime(DateTime time, ILogType log) {
-    DateTime now = DateTime.now();
+    final now = DateTime.now();
 
-    String date = '';
+    var date = '';
     if (settings(log).printDateInTime) {
-      String y = _fourDigits(now.year);
-      String m = _twoDigits(now.month);
-      String d = _twoDigits(now.day);
+      final y = _fourDigits(now.year);
+      final m = _twoDigits(now.month);
+      final d = _twoDigits(now.day);
       date = '$d.$m.$y';
     }
 
-    String h = _twoDigits(now.hour);
-    String min = _twoDigits(now.minute);
-    String sec = _twoDigits(now.second);
-    String ms = _threeDigits(now.millisecond);
+    final h = _twoDigits(now.hour);
+    final min = _twoDigits(now.minute);
+    final sec = _twoDigits(now.second);
+    final ms = _threeDigits(now.millisecond);
 
-    String timeSinceStart = '';
+    var timeSinceStart = '';
     if (settings(log).printTimeSinceStartInTime) {
       timeSinceStart = '(+${now.difference(startAppTime).toString()})';
     }

@@ -12,10 +12,11 @@ class MessageFormatter implements IMessageFormatter {
     return object.toString();
   }
 
+  @override
   String format(dynamic message) {
     final finalMessage = message is Function ? message() : message;
     if (finalMessage is Map || finalMessage is Iterable) {
-      var encoder = JsonEncoder.withIndent('  ', toEncodableFallback);
+      final encoder = JsonEncoder.withIndent('  ', toEncodableFallback);
       return encoder.convert(finalMessage);
     } else {
       return finalMessage.toString();

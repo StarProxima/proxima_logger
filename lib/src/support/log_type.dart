@@ -2,17 +2,17 @@ import 'ansi_pen.dart';
 
 /// ILogType is an interface for log types.
 abstract class ILogType {
-  final String label;
-  final String emoji;
-  final AnsiPen ansiPen;
-  final AnsiPen ansiPenOnBackground;
-
   ILogType({
     required this.label,
     required this.emoji,
     required this.ansiPen,
     required this.ansiPenOnBackground,
   });
+
+  final String label;
+  final String emoji;
+  final AnsiPen ansiPen;
+  final AnsiPen ansiPenOnBackground;
 }
 
 /// Default implementation of ILogType.

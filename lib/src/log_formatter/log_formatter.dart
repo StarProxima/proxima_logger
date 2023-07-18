@@ -13,13 +13,6 @@ abstract class ILogFormatter {
 
 /// Default implementation of [ILogFormatter].
 class LogFormatter implements ILogFormatter {
-  final SettingsBuilder settings;
-
-  late final IQueueFormatter queueFormatter;
-  late final IMessageFormatter messageFormatter;
-  late final IStackTraceFormatter stackFormatter;
-  late final ILogTimeFormatter timeFormatter;
-
   LogFormatter(
     this.settings, {
     IQueueFormatter? queueFormatter,
@@ -29,21 +22,23 @@ class LogFormatter implements ILogFormatter {
   }) {
     this.queueFormatter = queueFormatter ?? QueueFormatter();
     this.messageFormatter = messageFormatter ?? MessageFormatter();
-    this.stackFormatter = stackFormatter ??
-        StackTraceFormatter(
-          settings,
-        );
-    this.timeFormatter = logTimeFormatter ??
+    this.stackFormatter = stackFormatter ?? StackTraceFormatter(settings);
+    timeFormatter = logTimeFormatter ??
         LogTimeFormatter(
           settings,
           startAppTime: DateTime.now(),
         );
   }
 
+  final SettingsBuilder settings;
+  late final IQueueFormatter queueFormatter;
+  late final IMessageFormatter messageFormatter;
+  late final IStackTraceFormatter stackFormatter;
+  late final ILogTimeFormatter timeFormatter;
+
   @override
   FormattedLogEvent format(LogEvent event) {
-    List<LogPart> queue =
-        queueFormatter.format(event, settings(event.type).logParts);
+    final queue = queueFormatter.format(event, settings(event.type).logParts);
 
     String? error;
 
@@ -83,7 +78,7 @@ class LogFormatter implements ILogFormatter {
       message = messageFormatter.format(event.message);
     }
 
-    FormattedLogEvent formattedLogEvent = FormattedLogEvent(
+    final formattedLogEvent = FormattedLogEvent(
       log: event.type,
       queue: queue,
       title: event.title,

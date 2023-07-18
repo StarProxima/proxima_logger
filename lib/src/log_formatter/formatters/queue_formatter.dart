@@ -8,10 +8,11 @@ abstract class IQueueFormatter {
 
 /// Default implementation of [QueueFormatter]. Removes unnecessary [LogPart] if there is no data for them.
 class QueueFormatter implements IQueueFormatter {
+  @override
   List<LogPart> format(LogEvent event, List<LogPart> list) {
-    List<LogPart> queue = [];
+    final queue = <LogPart>[];
 
-    for (LogPart part in list) {
+    for (final part in list) {
       switch (part) {
         case LogPart.error:
           if (event.error == null) continue;

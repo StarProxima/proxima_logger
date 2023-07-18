@@ -7,6 +7,7 @@ abstract class LogOutput {
 class ConsoleOutput implements LogOutput {
   @override
   void output(OutputEvent outputEvent) {
+    // ignore: avoid_print
     outputEvent.lines.forEach(print);
   }
 }
