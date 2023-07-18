@@ -74,17 +74,24 @@ class StackTraceFormatter implements IStackTraceFormatter {
           line.isEmpty) {
         continue;
       }
+
+      final formatedLine = line
+          .replaceFirst(
+            settings(log).removeAsynchronousSuspensionFromStackTrace
+                ? RegExp(r'#\d+\s+|<asynchronous suspension>')
+                : RegExp(r'#\d+\s+'),
+            '',
+          )
+          .replaceAll('.<anonymous closure>', '()');
+
       formatted.add(
-        '#$count   ${line.replaceFirst(RegExp(r'#\d+\s+'), '').replaceAll('.<anonymous closure>', '()')}',
+        '#$count   $formatedLine',
       );
+
       if (isError) {
-        if (++count >= settings(log).errorStackTraceMethodCount) {
-          break;
-        }
+        if (++count >= settings(log).errorStackTraceMethodCount) break;
       } else {
-        if (++count >= settings(log).stackTraceMethodCount) {
-          break;
-        }
+        if (++count >= settings(log).stackTraceMethodCount) break;
       }
     }
 

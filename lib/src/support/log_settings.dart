@@ -46,6 +46,9 @@ class LogSettings {
   /// The number of methods to print in the error stack trace.
   final int errorStackTraceMethodCount;
 
+  /// Whether to remove <asynchronous suspension> from the stack trace.
+  final bool removeAsynchronousSuspensionFromStackTrace;
+
   /// The length of the line.
   final int lineLength;
 
@@ -80,6 +83,7 @@ class LogSettings {
     this.stackTraceMethodCount = 2,
     this.errorStackTraceMethodCount = 8,
     this.stackTraceBeginIndex = 2,
+    this.removeAsynchronousSuspensionFromStackTrace = true,
     this.lineLength = 120,
     this.decorateLogTypeLabel = true,
     this.selectError = true,
