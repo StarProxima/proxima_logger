@@ -1,3 +1,6 @@
+## 0.7.1
+- Update readme
+
 ## 0.7.0
 - **BREAKING**: Change interface class code style
 - **BREAKING**: The LogSettings are now set through the SettingsBuilder instead of Map
