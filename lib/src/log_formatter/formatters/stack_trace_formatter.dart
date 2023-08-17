@@ -86,7 +86,7 @@ class StackTraceFormatter implements IStackTraceFormatter {
 
       if (skipTrace) continue;
 
-      final formatedLine = line
+      final formattedLine = line
           .replaceFirst(
             typeSettings.removeAsynchronousSuspensionFromStackTrace
                 ? RegExp(r'#\d+\s+|<asynchronous suspension>')
@@ -95,10 +95,10 @@ class StackTraceFormatter implements IStackTraceFormatter {
           )
           .replaceAll('.<anonymous closure>', '()');
 
-      if (formatedLine.isEmpty) continue;
+      if (formattedLine.isEmpty) continue;
 
       formatted.add(
-        '#$count   $formatedLine',
+        '#$count   $formattedLine',
       );
 
       if (isError) {
