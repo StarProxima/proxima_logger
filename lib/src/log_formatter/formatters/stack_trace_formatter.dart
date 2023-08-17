@@ -58,6 +58,16 @@ class StackTraceFormatter implements IStackTraceFormatter {
     final typeSettings = settings(log);
 
     var lines = stackTrace.toString().split('\n');
+
+    lines = lines
+        .where(
+          (line) =>
+              !_discardDeviceStacktraceLine(line) &&
+              !_discardWebStacktraceLine(line) &&
+              !_discardBrowserStacktraceLine(line),
+        )
+        .toList();
+
     if (!isError &&
         typeSettings.stackTraceBeginIndex > 0 &&
         typeSettings.stackTraceBeginIndex < lines.length - 1) {
@@ -71,13 +81,10 @@ class StackTraceFormatter implements IStackTraceFormatter {
         : null;
 
     for (final line in lines) {
-      if (_discardDeviceStacktraceLine(line) ||
-          _discardWebStacktraceLine(line) ||
-          _discardBrowserStacktraceLine(line) ||
-          (skipStackTraceRegExp?.hasMatch(line) ?? false) ||
-          line.isEmpty) {
-        continue;
-      }
+      final skipTrace =
+          (skipStackTraceRegExp?.hasMatch(line) ?? false) || line.isEmpty;
+
+      if (skipTrace) continue;
 
       final formatedLine = line
           .replaceFirst(
@@ -87,6 +94,8 @@ class StackTraceFormatter implements IStackTraceFormatter {
             '',
           )
           .replaceAll('.<anonymous closure>', '()');
+
+      if (formatedLine.isEmpty) continue;
 
       formatted.add(
         '#$count   $formatedLine',
