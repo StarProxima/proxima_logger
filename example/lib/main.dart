@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'logger.dart' show Log;
@@ -13,21 +12,19 @@ import 'src/large_nesting_widget.dart';
 import 'src/model.dart';
 
 void main() {
-  void recordError(Object error, StackTrace stackTrace) {
+  bool recordError(Object error, StackTrace stackTrace) {
     logger.log(Log.error, error: error, stack: stackTrace);
+    return true;
   }
 
   void recordFlutterError(FlutterErrorDetails error) {
     logger.log(Log.error, error: error, stack: error.stack);
   }
 
-  runZonedGuarded(
-    () {
-      FlutterError.onError = recordFlutterError;
-      runApp(const MyApp());
-    },
-    recordError,
-  );
+  FlutterError.onError = recordFlutterError;
+  PlatformDispatcher.instance.onError = recordError;
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
