@@ -35,9 +35,7 @@ class StackTraceFormatter implements IStackTraceFormatter {
 
   static bool _discardWebStacktraceLine(String line) {
     final match = _webStackTraceRegex.matchAsPrefix(line);
-    if (match == null) {
-      return false;
-    }
+    if (match == null) return false;
 
     return line.contains('packages/proxima_logger') ||
         match.group(1)!.startsWith('dart-sdk/lib');
@@ -45,9 +43,7 @@ class StackTraceFormatter implements IStackTraceFormatter {
 
   static bool _discardBrowserStacktraceLine(String line) {
     final match = _browserStackTraceRegex.matchAsPrefix(line);
-    if (match == null) {
-      return false;
-    }
+    if (match == null) return false;
 
     return line.contains('package:proxima_logger') ||
         match.group(1)!.startsWith('dart:');
@@ -59,25 +55,33 @@ class StackTraceFormatter implements IStackTraceFormatter {
     StackTrace? stackTrace, {
     required bool isError,
   }) {
+    final typeSettings = settings(log);
+
     var lines = stackTrace.toString().split('\n');
     if (!isError &&
-        settings(log).stackTraceBeginIndex > 0 &&
-        settings(log).stackTraceBeginIndex < lines.length - 1) {
-      lines = lines.sublist(settings(log).stackTraceBeginIndex);
+        typeSettings.stackTraceBeginIndex > 0 &&
+        typeSettings.stackTraceBeginIndex < lines.length - 1) {
+      lines = lines.sublist(typeSettings.stackTraceBeginIndex);
     }
     final formatted = <String>[];
     var count = 0;
+
+    final skipStackTraceRegExp = typeSettings.skipStackTraceRegExp != null
+        ? RegExp(typeSettings.skipStackTraceRegExp!)
+        : null;
+
     for (final line in lines) {
       if (_discardDeviceStacktraceLine(line) ||
           _discardWebStacktraceLine(line) ||
           _discardBrowserStacktraceLine(line) ||
+          (skipStackTraceRegExp?.hasMatch(line) ?? false) ||
           line.isEmpty) {
         continue;
       }
 
       final formatedLine = line
           .replaceFirst(
-            settings(log).removeAsynchronousSuspensionFromStackTrace
+            typeSettings.removeAsynchronousSuspensionFromStackTrace
                 ? RegExp(r'#\d+\s+|<asynchronous suspension>')
                 : RegExp(r'#\d+\s+'),
             '',
@@ -89,9 +93,9 @@ class StackTraceFormatter implements IStackTraceFormatter {
       );
 
       if (isError) {
-        if (++count >= settings(log).errorStackTraceMethodCount) break;
+        if (++count >= typeSettings.errorStackTraceMethodCount) break;
       } else {
-        if (++count >= settings(log).stackTraceMethodCount) break;
+        if (++count >= typeSettings.stackTraceMethodCount) break;
       }
     }
 

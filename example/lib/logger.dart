@@ -33,6 +33,7 @@ final logger = MyLogger(
         printEmoji: true,
         printTitle: true,
         printLogTypeLabel: true,
+        skipStackTraceRegExp: '(_HomePageState.build()|package:proxima_logger)',
       ),
   },
 );

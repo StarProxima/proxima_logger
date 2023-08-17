@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs
 import 'log_decorations.dart';
 import 'log_type.dart';
 
@@ -16,6 +16,48 @@ typedef SettingsBuilder = LogSettings Function(ILogType logType);
 
 /// Settings for the logger.
 class LogSettings {
+  const LogSettings({
+    this.logParts = const [
+      LogPart.stack,
+      LogPart.error,
+      LogPart.time,
+      LogPart.divider,
+      LogPart.message,
+    ],
+    this.logDecorations = const LogDecorations.thin(),
+    this.printEmoji = true,
+    this.printLogTypeLabel = true,
+    this.printTitle = true,
+    this.printDateInTime = true,
+    this.printTimeSinceStartInTime = true,
+    this.stackTraceMethodCount = 2,
+    this.errorStackTraceMethodCount = 8,
+    this.stackTraceBeginIndex = 2,
+    this.skipStackTraceRegExp,
+    this.removeAsynchronousSuspensionFromStackTrace = true,
+    this.lineLength = 120,
+    this.decorateLogTypeLabel = true,
+    this.selectError = true,
+    this.leftBorder = true,
+    this.bottomBorder = true,
+    this.customSettings = const {},
+  })  : assert(
+          stackTraceMethodCount >= 0,
+          'stackTraceMethodCount must be >= 0',
+        ),
+        assert(
+          errorStackTraceMethodCount >= 0,
+          'errorStackTraceMethodCount must be >= 0',
+        ),
+        assert(
+          stackTraceBeginIndex >= 0,
+          'stackTraceBeginIndex must be >= 0',
+        ),
+        assert(
+          lineLength >= 0,
+          'lineLength must be >= 0',
+        );
+
   /// Wrapping style on output.
   final LogDecorations logDecorations;
 
@@ -46,6 +88,9 @@ class LogSettings {
   /// The number of methods to print in the error stack trace.
   final int errorStackTraceMethodCount;
 
+  /// Skips a string in the trace stack if they satisfy the regular expression.
+  final String? skipStackTraceRegExp;
+
   /// Whether to remove <asynchronous suspension> from the stack trace.
   final bool removeAsynchronousSuspensionFromStackTrace;
 
@@ -64,46 +109,6 @@ class LogSettings {
   /// Whether to print the bottom border.
   final bool bottomBorder;
 
+  /// Custom settings.
   final Map<String, Object> customSettings;
-
-  const LogSettings({
-    this.logParts = const [
-      LogPart.stack,
-      LogPart.error,
-      LogPart.time,
-      LogPart.divider,
-      LogPart.message,
-    ],
-    this.logDecorations = const LogDecorations.thin(),
-    this.printEmoji = true,
-    this.printLogTypeLabel = true,
-    this.printTitle = true,
-    this.printDateInTime = true,
-    this.printTimeSinceStartInTime = true,
-    this.stackTraceMethodCount = 2,
-    this.errorStackTraceMethodCount = 8,
-    this.stackTraceBeginIndex = 2,
-    this.removeAsynchronousSuspensionFromStackTrace = true,
-    this.lineLength = 120,
-    this.decorateLogTypeLabel = true,
-    this.selectError = true,
-    this.leftBorder = true,
-    this.bottomBorder = true,
-    this.customSettings = const {},
-  })  : assert(
-          stackTraceMethodCount >= 0,
-          'stackTraceMethodCount must be >= 0',
-        ),
-        assert(
-          errorStackTraceMethodCount >= 0,
-          'errorStackTraceMethodCount must be >= 0',
-        ),
-        assert(
-          stackTraceBeginIndex >= 0,
-          'stackTraceBeginIndex must be >= 0',
-        ),
-        assert(
-          lineLength >= 0,
-          'lineLength must be >= 0',
-        );
 }
