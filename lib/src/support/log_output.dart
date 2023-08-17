@@ -1,10 +1,10 @@
 import 'output_event.dart';
 
-abstract class LogOutput {
+abstract class ILogOutput {
   void output(OutputEvent outputEvent);
 }
 
-class ConsoleOutput implements LogOutput {
+class ConsoleOutput implements ILogOutput {
   @override
   void output(OutputEvent outputEvent) {
     for (final line in outputEvent.lines) {

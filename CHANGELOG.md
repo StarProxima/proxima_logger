@@ -1,3 +1,6 @@
+## 0.7.2
+- Add `skipStackTraceRegExp` settings and fix stack trace output.
+
 ## 0.7.1
 - Update readme
 

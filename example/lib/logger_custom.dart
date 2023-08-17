@@ -65,11 +65,11 @@ class CustomDecorator implements ILogDecorator {
   }
 }
 
-class CustomOutput implements LogOutput {
+class CustomOutput implements ILogOutput {
   CustomOutput(this.settings);
   final SettingsBuilder settings;
 
-  late final LogOutput _output = ConsoleOutput();
+  late final ILogOutput _output = ConsoleOutput();
 
   @override
   void output(OutputEvent outputEvent) {

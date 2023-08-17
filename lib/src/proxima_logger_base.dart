@@ -14,7 +14,7 @@ abstract class ProximaLoggerBase {
     SettingsBuilder? settings,
     ILogFormatter? formatter,
     ILogDecorator? decorator,
-    LogOutput? output,
+    ILogOutput? output,
   }) {
     final settingsBuilder = settings ?? (_) => LogSettings();
 
@@ -25,7 +25,7 @@ abstract class ProximaLoggerBase {
 
   late final ILogFormatter _formatter;
   late final ILogDecorator _decorator;
-  late final LogOutput _output;
+  late final ILogOutput _output;
 
   /// Prints a log message.
   void log(
