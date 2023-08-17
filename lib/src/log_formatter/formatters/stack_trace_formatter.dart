@@ -93,8 +93,7 @@ class StackTraceFormatter implements IStackTraceFormatter {
                 : RegExp(r'#\d+\s+'),
             '',
           )
-          .replaceAll('.<anonymous closure>', '()')
-          .trim();
+          .replaceAll('.<anonymous closure>', '()');
 
       if (formatedLine.isEmpty) continue;
 
